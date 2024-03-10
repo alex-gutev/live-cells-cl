@@ -8,19 +8,19 @@
   (:documentation
    "Retrieve the value of a CELL.
 
-This method should be implemented by all cells."))
+This function should be implemented by all cells."))
 
 (defgeneric (setf cell-value) (value cell)
   (:documentation
    "Set the value of a CELL.
 
-This method should only be implemented by mutable cells."))
+This function should only be implemented by mutable cells."))
 
 (defgeneric add-observer (cell observer)
   (:documentation
    "Add an OBSERVER, that is notified when the value of CELL changes.
 
-This method should be implemented by all cells."))
+This function should be implemented by all cells."))
 
 (defgeneric remove-observer (cell observer)
   (:documentation
