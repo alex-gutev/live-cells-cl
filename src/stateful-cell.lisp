@@ -199,4 +199,6 @@ returned."
 (defmethod remove-observer ((cell stateful-cell) observer)
   "Remove an observer from the observer set of the `STATEFUL-CELL'."
 
-  (remove-observer (state cell) observer))
+  (with-slots (state) cell
+    (when state
+      (remove-observer state observer))))
