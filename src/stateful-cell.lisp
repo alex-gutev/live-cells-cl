@@ -116,7 +116,7 @@ returned."))
 
 (defmethod dispose ((state cell-state))
   (erase *cell-state-table* (state-key state))
-  (setf (disposed state) t))
+  (setf (disposed? state) t))
 
 (defmethod add-observer ((state cell-state) observer)
   (with-accessors ((observers observers)) state
@@ -174,7 +174,7 @@ MAKE-STATE."
   "Retrieve the state of a `STATEFUL-CELL', creating it if it doesn't exist."
 
   (with-slots (state key) cell
-    (when (or (null state) (disposed state))
+    (when (or (null state) (disposed? state))
       (setf state (get-cell-state key (create-state cell))))
 
     state))
@@ -186,7 +186,7 @@ If the state has been disposed or none has been initialized, NIL is
 returned."
 
   (with-slots (key state) cell
-    (when (or (null state) (disposed state))
+    (when (or (null state) (disposed? state))
       (setf state (get key *cell-state-table*)))
 
     state))

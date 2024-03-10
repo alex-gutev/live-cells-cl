@@ -64,7 +64,7 @@ CELL has a NIL key."))
 (defmethod (setf mutable-cell-value) (new-value (state mutable-cell-state))
   (with-slots (value) state
     (cond
-      ((disposed state)
+      ((disposed? state)
        (setf value new-value))
 
       (t
@@ -85,7 +85,7 @@ or add it to the current batch, if a batch update is in effect."
 
 (defmethod create-state ((cell mutable-cell))
   (with-slots (mutable-state key) cell
-    (when (or (null mutable-state) (disposed mutable-state))
+    (when (or (null mutable-state) (disposed? mutable-state))
       (->> (and (null key) mutable-state)
 	   (create-mutable-state cell)
 	   (setf mutable-state)))
