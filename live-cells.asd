@@ -13,6 +13,9 @@
 		 (:file "compute-cell")
 		 (:file "stateful-cell")
 		 (:file "mutable-cell")
+		 (:file "observer-cell-state")
+		 (:file "compute-cell-state")
+		 (:file "dynamic-compute-cell")
 		 (:file "watch"))))
 
   :depends-on (:alexandria

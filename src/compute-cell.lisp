@@ -50,6 +50,17 @@ passed to USE-CELL."
 	   (lambda (,cell-arg) ,@body)))
      ,@forms))
 
+(defmacro! without-tracker (&body forms)
+  "Evaluate FORMS without an argument cell tracker in-effect.
+
+As a result calling USE-VALUE, within FORMS, will not call
+*TRACK-CELL-CALLBACK*.
+
+The value of the last form in FORMS is returned."
+
+  `(with-tracker ((,g!arg) (declare (ignore ,g!arg)))
+     ,@forms))
+
 (defun use-cell (cell)
   "Get the value of a cell and register it as a dependency.
 

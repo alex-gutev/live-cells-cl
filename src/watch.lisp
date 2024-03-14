@@ -79,7 +79,7 @@ The value returned by CALLBACK is returned by this function."
 
     (when updating
       (setf updating nil)
-      (track-referenced-cells watcher (funcall callback)))))
+      (track-referenced-cells watcher callback))))
 
 ;;TODO: Move this to the public package
 
