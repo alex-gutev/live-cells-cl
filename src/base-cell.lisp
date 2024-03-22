@@ -1,4 +1,4 @@
-;;; Provides the base interface for cell code generation.
+;;;; Provides the base interface for cell code generation.
 
 (in-package :live-cells)
 

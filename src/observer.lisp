@@ -1,5 +1,5 @@
-;;; Provides the cell observer and argument record structure
-;;; definitions.
+;;;; Provides the cell observer and argument record structure
+;;;; definitions.
 
 (in-package :live-cells)
 
