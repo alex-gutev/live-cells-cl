@@ -1,0 +1,103 @@
+;;;; Provides functionality for generating the definition of a cell
+;;;; that is a function of one or more argument cells.
+
+(in-package :live-cells)
+
+
+;;; Interface
+
+(defclass compute-cell-spec (observer-cell-spec)
+  ((arguments
+    :initarg :arguments
+    :initform (cell-symbol 'cell 'arguments)
+    :accessor arguments
+    :documentation
+    "Name of the variable holding the cell's argument set.")
+
+   (compute
+    :initarg :compute
+    :initform (cell-symbol 'cell 'compute)
+    :accessor compute
+    :documentation
+    "Name of the compute value function for this cell."))
+
+  (:documentation
+   "Specification for a cell of which the value is a function of one
+   or more argument cells."))
+
+(defgeneric generate-observer-record (spec)
+  (:documentation
+   "Generate the `OBSERVER' record for the cell defined by SPEC."))
+
+(defgeneric generate-compute (spec)
+  (:documentation
+   "Generate the compute value function for the cell defined by SPEC.
+
+The return value of this function should be a single form that
+computes the value of the cell."))
+
+
+;;; Implementation
+
+(defmethod generate-init ((spec compute-cell-spec))
+  "Generate code which adds the cell as an observer of its arguments."
+
+  (with-slots (arguments) spec
+    (with-gensyms (arg)
+      `(progn
+	 (doseq (,arg ,arguments)
+	   (call-add-observer ,arg ,(generate-observer-record spec)))))))
+
+(defmethod generate-pause ((spec compute-cell-spec))
+  "Generate code which stops observing the argument cells."
+
+  (with-slots (arguments) spec
+    (with-gensyms (arg)
+      `(progn
+	 (doseq (,arg ,arguments)
+	   (call-remove-observer ,arg ,(generate-observer-record spec)))))))
+
+(defmethod generate-use-cell ((spec compute-cell-spec))
+  (with-slots (stale? value compute) spec
+    `(progn
+       `(progn
+	  ,'(track-argument ,(generate-argument-record spec))
+
+	  (when ,',stale?
+	    (setf ,',value (,',compute)
+		  ,',stale? nil))
+
+	  ,',value))))
+
+(defmethod generate-compute ((spec compute-cell-spec))
+  (with-slots (init-form arguments) spec
+    (with-gensyms (arg)
+      `(with-tracker
+	   ((,arg)
+	     (when (not (memberp ,arg ,arguments))
+	       (call-add-observer ,arg ,(generate-observer-record spec))
+	       (->> (nadjoin ,arg ,arguments)
+	   	    (setf ,arguments))))
+
+	 ,init-form))))
+
+(defmethod generate-observer-record ((spec compute-cell-spec))
+  (with-slots (name will-update update) spec
+    `(make-observer
+      :key ',name
+      :will-update #',will-update
+      :update #',update)))
+
+(defmethod generate-extra ((spec compute-cell-spec))
+  (with-slots (compute) spec
+    `(progn
+       ,(call-next-method)
+       (defun ,compute () ,(generate-compute spec)))))
+
+(defmethod generate-cell-definition ((spec compute-cell-spec))
+  (with-slots (arguments update will-update compute) spec
+    `(progn
+       (defvar ,arguments (make-hash-set))
+       (declaim (ftype function ,update ,will-update ,compute))
+
+       ,(call-next-method))))
