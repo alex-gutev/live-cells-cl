@@ -32,37 +32,37 @@
 
 (defmethod generate-watch-function ((spec watch-function-spec))
   (with-gensyms (updating?
-		 will-update
-		 update
-		 watch
-		 arguments
-		 arg)
+                 will-update
+                 update
+                 watch
+                 arguments
+                 arg)
 
     (with-slots (name body) spec
       `(let ((,updating? nil) (,arguments (make-hash-set)))
-	 (labels ((,will-update (,arg)
-		    (declare (ignore ,arg))
-		    (when (not ,updating?)
-		      (setf ,updating? t)))
+         (labels ((,will-update (,arg)
+                    (declare (ignore ,arg))
+                    (when (not ,updating?)
+                      (setf ,updating? t)))
 
-		  (,update (,arg)
-		    (declare (ignore ,arg))
-		    (when ,updating?
-		      (,watch)
-		      (setf ,updating? nil)))
+                  (,update (,arg)
+                    (declare (ignore ,arg))
+                    (when ,updating?
+                      (,watch)
+                      (setf ,updating? nil)))
 
-		  (,watch ()
-		    (with-tracker
-			((,arg)
-			  (unless (memberp ,arg ,arguments)
-			    (->> (nadjoin ,arg ,arguments)
-				 (setf ,arguments))
+                  (,watch ()
+                    (with-tracker
+                        ((,arg)
+                          (unless (memberp ,arg ,arguments)
+                            (->> (nadjoin ,arg ,arguments)
+                                 (setf ,arguments))
 
-			    (call-add-observer
-			     ,arg
-			     (make-observer :key ',name
-					    :will-update #',will-update
-					    :update #',update))))
-		      ,@body
-		      )))
-	   (,watch))))))
+                            (call-add-observer
+                             ,arg
+                             (make-observer :key ',name
+                                            :will-update #',will-update
+                                            :update #',update))))
+                      ,@body
+                      )))
+           (,watch))))))

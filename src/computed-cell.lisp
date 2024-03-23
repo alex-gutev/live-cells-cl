@@ -45,8 +45,8 @@ computes the value of the cell."))
   (with-slots (arguments) spec
     (with-gensyms (arg)
       `(progn
-	 (doseq (,arg ,arguments)
-	   (call-add-observer ,arg ,(generate-observer-record spec)))))))
+         (doseq (,arg ,arguments)
+           (call-add-observer ,arg ,(generate-observer-record spec)))))))
 
 (defmethod generate-pause ((spec compute-cell-spec))
   "Generate code which stops observing the argument cells."
@@ -54,32 +54,32 @@ computes the value of the cell."))
   (with-slots (arguments) spec
     (with-gensyms (arg)
       `(progn
-	 (doseq (,arg ,arguments)
-	   (call-remove-observer ,arg ,(generate-observer-record spec)))))))
+         (doseq (,arg ,arguments)
+           (call-remove-observer ,arg ,(generate-observer-record spec)))))))
 
 (defmethod generate-use-cell ((spec compute-cell-spec))
   (with-slots (stale? value compute) spec
     `(progn
        `(progn
-	  ,'(track-argument ,(generate-argument-record spec))
+          ,'(track-argument ,(generate-argument-record spec))
 
-	  (when ,',stale?
-	    (setf ,',value (,',compute)
-		  ,',stale? nil))
+          (when ,',stale?
+            (setf ,',value (,',compute)
+                  ,',stale? nil))
 
-	  ,',value))))
+          ,',value))))
 
 (defmethod generate-compute ((spec compute-cell-spec))
   (with-slots (init-form arguments) spec
     (with-gensyms (arg)
       `(with-tracker
-	   ((,arg)
-	     (when (not (memberp ,arg ,arguments))
-	       (call-add-observer ,arg ,(generate-observer-record spec))
-	       (->> (nadjoin ,arg ,arguments)
-	   	    (setf ,arguments))))
+           ((,arg)
+             (when (not (memberp ,arg ,arguments))
+               (call-add-observer ,arg ,(generate-observer-record spec))
+               (->> (nadjoin ,arg ,arguments)
+                    (setf ,arguments))))
 
-	 ,init-form))))
+         ,init-form))))
 
 (defmethod generate-observer-record ((spec compute-cell-spec))
   (with-slots (name will-update update) spec

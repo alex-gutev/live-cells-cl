@@ -168,8 +168,8 @@ function. If NIL is returned, no cleanup function is generated."))
   (with-slots (observers) spec
     `(progn
        ,@(awhen (generate-init spec)
-	   `((when (emptyp ,observers)
-	       ,it)))
+           `((when (emptyp ,observers)
+               ,it)))
 
        (incf (get ,arg ,observers 0)))))
 
@@ -177,13 +177,13 @@ function. If NIL is returned, no cleanup function is generated."))
   (with-slots (observers) spec
     `(progn
        (awhen (get ,arg ,observers)
-	 (if (= it 1)
-	     (erase ,observers ,arg)
-	     (decf (get ,arg ,observers))))
+         (if (= it 1)
+             (erase ,observers ,arg)
+             (decf (get ,arg ,observers))))
 
        ,@(awhen (generate-pause spec)
-	   `((when (emptyp ,observers)
-	       ,it))))))
+           `((when (emptyp ,observers)
+               ,it))))))
 
 (defmethod generate-init ((spec cell-spec)) nil)
 (defmethod generate-pause ((spec cell-spec)) nil)
@@ -193,45 +193,45 @@ function. If NIL is returned, no cleanup function is generated."))
   (with-slots (value) spec
     `(progn
        `(progn
-	  ,'(track-argument ,(generate-argument-record spec))
-	  ,',value))))
+          ,'(track-argument ,(generate-argument-record spec))
+          ,',value))))
 
 (defmethod generate-notify-will-update ((spec cell-spec))
   (with-slots (observers) spec
     (with-gensyms (observer)
       `(progn
-	 (doseq (,observer (map-keys ,observers))
-	   (call-will-update ,observer ,(generate-argument-record spec)))))))
+         (doseq (,observer (map-keys ,observers))
+           (call-will-update ,observer ,(generate-argument-record spec)))))))
 
 (defmethod generate-notify-update ((spec cell-spec))
   (with-slots (observers) spec
     (with-gensyms (observer)
       `(progn
-	 (doseq (,observer (map-keys ,observers))
-	   (call-update ,observer ,(generate-argument-record spec)))))))
+         (doseq (,observer (map-keys ,observers))
+           (call-update ,observer ,(generate-argument-record spec)))))))
 
 (defmethod generate-cell-definition ((spec cell-spec))
   (with-slots (name
-	       value
-	       init-form
-	       observers
-	       add-observer
-	       remove-observer
-	       notify-update
-	       notify-will-update)
+               value
+               init-form
+               observers
+               add-observer
+               remove-observer
+               notify-update
+               notify-will-update)
       spec
 
     (with-gensyms (observer)
       `(progn
-	 (defparameter ,value ,init-form)
-	 (defvar ,observers (make-hash-map))
+         (defparameter ,value ,init-form)
+         (defvar ,observers (make-hash-map))
 
-	 (defun ,add-observer (,observer) ,(generate-add-observer spec observer))
-	 (defun ,remove-observer (,observer) ,(generate-remove-observer spec observer))
-	 (defun ,notify-update () ,(generate-notify-update spec))
-	 (defun ,notify-will-update () ,(generate-notify-will-update spec))
+         (defun ,add-observer (,observer) ,(generate-add-observer spec observer))
+         (defun ,remove-observer (,observer) ,(generate-remove-observer spec observer))
+         (defun ,notify-update () ,(generate-notify-update spec))
+         (defun ,notify-will-update () ,(generate-notify-will-update spec))
 
-	 (defmacro ,value () ,(generate-use-cell spec))
-	 (define-symbol-macro ,name (,value))
+         (defmacro ,value () ,(generate-use-cell spec))
+         (define-symbol-macro ,name (,value))
 
-	 ,(generate-extra spec)))))
+         ,(generate-extra spec)))))

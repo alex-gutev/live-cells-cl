@@ -87,27 +87,27 @@ with ARG being the symbol to use for the function argument."))
   (with-slots (updating? stale?) spec
     `(progn
        (when (not ,updating?)
-	 ,@(awhen (generate-pre-update spec)
-	     `(,it))
+         ,@(awhen (generate-pre-update spec)
+             `(,it))
 
-	 (setf ,updating? t)
+         (setf ,updating? t)
 
-	 ,@(awhen (generate-on-will-update spec)
-	     `(,it))
+         ,@(awhen (generate-on-will-update spec)
+             `(,it))
 
-	 (setf ,stale? t)))))
+         (setf ,stale? t)))))
 
 (defmethod generate-update ((spec observer-cell-spec) arg)
   (with-slots (updating? stale?) spec
     `(progn
        (when ,updating?
-	 ,@(awhen (generate-on-update spec)
-	     `(,it))
+         ,@(awhen (generate-on-update spec)
+             `(,it))
 
-	 (setf ,updating? nil)
+         (setf ,updating? nil)
 
-	 ,@(awhen (generate-post-update spec)
-	     `(,it))))))
+         ,@(awhen (generate-post-update spec)
+             `(,it))))))
 
 (defmethod generate-on-will-update ((spec observer-cell-spec))
   (with-slots (notify-will-update) spec
@@ -124,11 +124,11 @@ with ARG being the symbol to use for the function argument."))
 
 (defmethod generate-cell-definition ((spec observer-cell-spec))
   (with-slots (stale?
-	       updating?
-	       will-update
-	       notify-update
-	       notify-will-update
-	       update)
+               updating?
+               will-update
+               notify-update
+               notify-will-update
+               update)
       spec
 
     `(progn
@@ -143,11 +143,11 @@ with ARG being the symbol to use for the function argument."))
   (with-slots (will-update update) spec
     (with-gensyms (arg)
       `(progn
-	 ,(call-next-method)
-	 (defun ,will-update (,arg)
-	   (declare (ignorable ,arg))
-	   ,(generate-will-update spec arg))
+         ,(call-next-method)
+         (defun ,will-update (,arg)
+           (declare (ignorable ,arg))
+           ,(generate-will-update spec arg))
 
-	 (defun ,update (,arg)
-	   (declare (ignorable ,arg))
-	   ,(generate-update spec arg))))))
+         (defun ,update (,arg)
+           (declare (ignorable ,arg))
+           ,(generate-update spec arg))))))

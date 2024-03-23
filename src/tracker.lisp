@@ -21,7 +21,7 @@ being the name of the symbol which is bound to the cell that was
 passed to the use cell function."
 
   `(let ((*track-cell-callback*
-	   (lambda (,cell-arg) ,@body)))
+           (lambda (,cell-arg) ,@body)))
      ,@forms))
 
 (defmacro! without-tracker (&body forms)
