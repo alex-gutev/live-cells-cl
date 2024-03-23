@@ -30,7 +30,7 @@ identifier. The symbol is interned in +CELL-DEF-PACKAGE+."
     :initarg :value
     :initform (cell-symbol 'cell 'cell-value)
     :accessor value
-    :documenation
+    :documentation
     "Name of the variable holding the cell's value.")
 
    (init-form
