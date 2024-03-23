@@ -36,7 +36,11 @@
     :initform (cell-symbol 'cell 'update)
     :accessor update
     :documentation
-    "Name of the variable holding the cells 'update' function.")))
+    "Name of the variable holding the cells 'update' function."))
+
+  (:documentation
+   "Specification for a cell of which the value is recomputed when the
+   values of its argument cells change."))
 
 (defgeneric generate-pre-update (spec)
   (:documentation

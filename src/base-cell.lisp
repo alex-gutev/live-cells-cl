@@ -74,7 +74,11 @@ identifier. The symbol is interned in +CELL-DEF-PACKAGE+."
     :accessor notify-will-update
     :documentation
     "Name of the function for notifying the observers of this cell
-    that its value will change.")))
+    that its value will change."))
+
+  (:documentation
+   "Specification for a cell, that is used by code generators to
+   generate the actual implementation."))
 
 
 ;;; Code generation interface
