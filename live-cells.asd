@@ -8,18 +8,13 @@
 		"src"
 		:serial t
 		:components
-		((:module
-		  "base"
-		  :components
-		  ((:file "package")
-		   (:file "interface")
-		   (:file "compute-cell")
-		   (:file "stateful-cell")
-		   (:file "mutable-cell")
-		   (:file "observer-cell-state")
-		   (:file "compute-cell-state")
-		   (:file "dynamic-compute-cell")
-		   (:file "watch"))))))
+		((:file "package")
+		 (:file "observer")
+		 (:file "base-cell")
+		 (:file "tracker")
+		 (:file "observer-cell")
+		 (:file "computed-cell")
+		 (:file "watch-function"))))
 
   :depends-on (:alexandria
 	       :anaphora
