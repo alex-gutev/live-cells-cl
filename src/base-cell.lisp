@@ -87,6 +87,18 @@ identifier. The symbol is interned in +CELL-DEF-PACKAGE+."
   (:documentation
    "Generate the form implementing the cell defined by SPEC."))
 
+(defgeneric generate-cell-variables (spec)
+  (:documentation
+   "Generate the list of variables for the cell defined by SPEC.
+
+Returns a list of `VARIABLE-SPEC's."))
+
+(defgeneric generate-cell-functions (spec)
+  (:documentation
+   "Generate the list of functions for the cell defined by SPEC.
+
+Returns a list of `FUNCTION-SPEC's."))
+
 (defgeneric generate-use-cell (spec)
   (:documentation
    "Generate a form that references the value of the cell defined by
@@ -210,7 +222,30 @@ function. If NIL is returned, no cleanup function is generated."))
          (doseq (,observer (map-keys ,observers))
            (call-update ,observer ,(generate-argument-record spec)))))))
 
-(defmethod generate-cell-definition ((spec cell-spec))
+(defmethod generate-cell-variables ((spec cell-spec))
+  (with-slots (name
+               value
+               init-form
+               observers)
+      spec
+
+    (list
+     (make-variable-spec
+      :name name
+      :initform `(,value)
+      :type :symbol-macro)
+
+     (make-variable-spec
+      :name value
+      :initform init-form
+      :type :param)
+
+     (make-variable-spec
+      :name observers
+      :initform '(make-hash-map)
+      :type :variable))))
+
+(defmethod generate-cell-functions ((spec cell-spec))
   (with-slots (name
                value
                init-form
@@ -222,16 +257,40 @@ function. If NIL is returned, no cleanup function is generated."))
       spec
 
     (with-gensyms (observer)
-      `(progn
-         (defparameter ,value ,init-form)
-         (defvar ,observers (make-hash-map))
+      (list
 
-         (defun ,add-observer (,observer) ,(generate-add-observer spec observer))
-         (defun ,remove-observer (,observer) ,(generate-remove-observer spec observer))
-         (defun ,notify-update () ,(generate-notify-update spec))
-         (defun ,notify-will-update () ,(generate-notify-will-update spec))
+       (make-function-spec
+        :name add-observer
+        :lambda-list `(,observer)
+        :body (list (generate-add-observer spec observer))
+        :type :function)
 
-         (defmacro ,value () ,(generate-use-cell spec))
-         (define-symbol-macro ,name (,value))
+       (make-function-spec
+        :name remove-observer
+        :lambda-list `(,observer)
+        :body (list (generate-remove-observer spec observer))
+        :type :function)
 
-         ,(generate-extra spec)))))
+       (make-function-spec
+        :name notify-update
+        :lambda-list ()
+        :body (list (generate-notify-update spec))
+        :type :function)
+
+       (make-function-spec
+        :name notify-will-update
+        :lambda-list ()
+        :body (list (generate-notify-will-update spec)))
+
+       (make-function-spec
+        :name value
+        :lambda-list ()
+        :body (list (generate-use-cell spec)))))))
+
+(defmethod generate-cell-definition ((spec cell-spec))
+  `(progn
+     ,@(->> (generate-cell-variables spec)
+            (map #'generate-variable-definition))
+
+     ,@(->> (generate-cell-functions spec)
+            (map #'generate-function-definition))))
