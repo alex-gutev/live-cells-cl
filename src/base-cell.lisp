@@ -261,29 +261,31 @@ function. If NIL is returned, no cleanup function is generated."))
 
        (make-function-spec
         :name add-observer
+        :type :function
         :lambda-list `(,observer)
-        :body (list (generate-add-observer spec observer))
-        :type :function)
+        :body (list (generate-add-observer spec observer)))
 
        (make-function-spec
         :name remove-observer
+        :type :function
         :lambda-list `(,observer)
-        :body (list (generate-remove-observer spec observer))
-        :type :function)
+        :body (list (generate-remove-observer spec observer)))
 
        (make-function-spec
         :name notify-update
+        :type :function
         :lambda-list ()
-        :body (list (generate-notify-update spec))
-        :type :function)
+        :body (list (generate-notify-update spec)))
 
        (make-function-spec
         :name notify-will-update
+        :type :function
         :lambda-list ()
         :body (list (generate-notify-will-update spec)))
 
        (make-function-spec
         :name value
+        :type :macro
         :lambda-list ()
         :body (list (generate-use-cell spec)))))))
 
@@ -293,4 +295,6 @@ function. If NIL is returned, no cleanup function is generated."))
             (map #'generate-variable-definition))
 
      ,@(->> (generate-cell-functions spec)
-            (map #'generate-function-definition))))
+            (map #'generate-function-definition))
+
+     ,(generate-extra spec)))

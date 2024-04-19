@@ -88,16 +88,24 @@ computes the value of the cell."))
       :will-update #',will-update
       :update #',update)))
 
-(defmethod generate-extra ((spec compute-cell-spec))
+(defmethod generate-cell-variables ((spec compute-cell-spec))
+  (with-slots (arguments) spec
+    (list*
+     (make-variable-spec
+      :name arguments
+      :initform '(make-hash-set)
+      :type :variable)
+
+     (call-next-method))))
+
+(defmethod generate-cell-functions ((spec compute-cell-spec))
   (with-slots (compute) spec
-    `(progn
-       ,(call-next-method)
-       (defun ,compute () ,(generate-compute spec)))))
+    (append
+     (call-next-method)
 
-(defmethod generate-cell-definition ((spec compute-cell-spec))
-  (with-slots (arguments update will-update compute) spec
-    `(progn
-       (defvar ,arguments (make-hash-set))
-       (declaim (ftype function ,update ,will-update ,compute))
-
-       ,(call-next-method))))
+     (list
+      (make-function-spec
+       :name compute
+       :type :function
+       :lambda-list ()
+       :body (list (generate-compute spec)))))))

@@ -9,6 +9,7 @@
                 :serial t
                 :components
                 ((:file "package")
+                 (:file "codegen")
                  (:file "observer")
                  (:file "base-cell")
                  (:file "tracker")

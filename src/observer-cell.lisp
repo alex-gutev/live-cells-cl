@@ -122,32 +122,37 @@ with ARG being the symbol to use for the function argument."))
 (defmethod generate-pre-update ((spec observer-cell-spec)) nil)
 (defmethod generate-post-update ((spec observer-cell-spec)) nil)
 
-(defmethod generate-cell-definition ((spec observer-cell-spec))
-  (with-slots (stale?
-               updating?
-               will-update
-               notify-update
-               notify-will-update
-               update)
-      spec
+(defmethod generate-cell-variables ((spec observer-cell-spec))
+  (with-slots (stale? updating?) spec
 
-    `(progn
-       (defvar ,stale? t)
-       (defvar ,updating? nil)
+    (list*
+     (make-variable-spec
+      :name stale?
+      :initform t
+      :type :variable)
 
-       (declaim (ftype function ,notify-update ,notify-will-update))
+     (make-variable-spec
+      :name updating?
+      :initform nil
+      :type :variable)
 
-       ,(call-next-method))))
+     (call-next-method))))
 
-(defmethod generate-extra ((spec observer-cell-spec))
+(defmethod generate-cell-functions ((spec observer-cell-spec))
   (with-slots (will-update update) spec
     (with-gensyms (arg)
-      `(progn
-         ,(call-next-method)
-         (defun ,will-update (,arg)
-           (declare (ignorable ,arg))
-           ,(generate-will-update spec arg))
+      (append
+       (call-next-method)
 
-         (defun ,update (,arg)
-           (declare (ignorable ,arg))
-           ,(generate-update spec arg))))))
+       (list
+        (make-function-spec
+         :name will-update
+         :type :function
+         :lambda-list `(,arg)
+         :body (list (generate-will-update spec arg)))
+
+        (make-function-spec
+         :name update
+         :type :function
+         :lambda-list `(,arg)
+         :body (list (generate-update spec arg))))))))
