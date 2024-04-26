@@ -24,6 +24,22 @@
     "Name of the variable holding the flag for whether the cell's
     value is being recomputed.")
 
+   (changed-dependencies
+    :initarg :changed-dependencies
+    :initform (cell-symbol 'cell 'changed-dependencies)
+    :accessor changed-dependencies
+    :documentation
+    "Name of the variable holding the number of dependencies that were
+    changed during the current update cycle.")
+
+   (did-change?
+    :initarg :did-change?
+    :initform (cell-symbol 'cell 'did-change?)
+    :accessor did-change?
+    :documentation
+    "Name of the variable holding the flag for whether the cell's
+    value may have changed during the current update cycle.")
+
    (will-update
     :initarg :will-update
     :initform (cell-symbol 'cell 'will-update)
@@ -84,30 +100,51 @@ with ARG being the symbol to use for the function argument."))
 ;;; Implementations
 
 (defmethod generate-will-update ((spec observer-cell-spec) arg)
-  (with-slots (updating? stale?) spec
+  (with-slots (updating? stale? changed-dependencies did-change?) spec
     `(progn
        (when (not ,updating?)
+         (assert (zerop ,changed-dependencies)
+                 (,changed-dependencies)
+                 (concatenate
+                  "The number of changed dependencies is not equal zero at the start of the update cycle."
+                  "~%~%"
+                  "This indicates that one of the cell's dependencies missed an 'update' call.~%~%"
+                  "Unless this error originates from third-party code, this indicates a bug in live-cells-cl."))
+
          ,@(awhen (generate-pre-update spec)
              `(,it))
 
-         (setf ,updating? t)
+         (setf ,updating? t
+               ,did-change? nil
+               ,changed-dependencies 0)
 
          ,@(awhen (generate-on-will-update spec)
              `(,it))
 
-         (setf ,stale? t)))))
+         (setf ,stale? t))
+
+       (incf ,changed-dependencies))))
 
 (defmethod generate-update ((spec observer-cell-spec) arg)
-  (with-slots (updating? stale?) spec
+  (with-slots (updating? stale? changed-dependencies) spec
     `(progn
        (when ,updating?
-         ,@(awhen (generate-on-update spec)
-             `(,it))
+         (assert (plusp ,changed-dependencies)
+                 (,changed-dependencies)
+                 (concatenate
+                  "More 'update' calls than 'will-update' calls in the current update cycle.~%~%"
+                  "The number of 'update' calls must match exactly the number of 'will-update' calls"
+                  " in a given update cycle.~%~%"
+                  "Unless this error originates from third-party code, this indicates a bug in live-cells-cl."))
 
-         (setf ,updating? nil)
+         (when (zerop (decf ,changed-dependencies))
+           ,@(awhen (generate-on-update spec)
+               `(,it))
 
-         ,@(awhen (generate-post-update spec)
-             `(,it))))))
+           (setf ,updating? nil)
+
+           ,@(awhen (generate-post-update spec)
+               `(,it)))))))
 
 (defmethod generate-on-will-update ((spec observer-cell-spec))
   (with-slots (notify-will-update) spec
@@ -123,7 +160,7 @@ with ARG being the symbol to use for the function argument."))
 (defmethod generate-post-update ((spec observer-cell-spec)) nil)
 
 (defmethod generate-cell-variables ((spec observer-cell-spec))
-  (with-slots (stale? updating?) spec
+  (with-slots (stale? updating? changed-dependencies did-change?) spec
 
     (list*
      (make-variable-spec
@@ -133,6 +170,16 @@ with ARG being the symbol to use for the function argument."))
 
      (make-variable-spec
       :name updating?
+      :initform nil
+      :type :variable)
+
+     (make-variable-spec
+      :name changed-dependencies
+      :initform 0
+      :type :variable)
+
+     (make-variable-spec
+      :name did-change?
       :initform nil
       :type :variable)
 
