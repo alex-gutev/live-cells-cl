@@ -31,12 +31,16 @@ ARG is the `ARGUMENT' identifying the argument cell."
 
   (funcall (observer-will-update observer) arg))
 
-(defun call-update (observer arg)
+(defun call-update (observer arg did-change)
   "Call the 'update' OBSERVER method.
 
-ARG is the `ARGUMENT' identifying the argument cell."
+ARG is the `ARGUMENT' identifying the argument cell.
 
-  (funcall (observer-update observer) arg))
+DID-CHANGE indicates whether the value of ARG has changed. If true
+then the value of ARG may have changed, but not necessarily has
+changed. If false then the value of ARG has definitely not changed."
+
+  (funcall (observer-update observer) arg did-change))
 
 
 ;;; Cell Argument record

@@ -77,10 +77,12 @@ after the value is updated."))
    "Generate the form which calls the 'will-update' function of the
    observers of the cell defined by SPEC."))
 
-(defgeneric generate-on-update (spec)
+(defgeneric generate-on-update (spec did-change)
   (:documentation
-   "Generate the form which calls the 'update' function of the
-   observers of the cell defined by SPEC."))
+   "Generate the form which calls the 'update' function of the observers of the cell defined by SPEC.
+
+DID-CHANGE is the symbol identifying the variable holding the value of
+the 'did change' argument to the update call."))
 
 (defgeneric generate-will-update (spec arg)
   (:documentation
@@ -89,12 +91,24 @@ after the value is updated."))
 The return value should be a single form implementing the function,
 with ARG being the symbol to use for the function argument."))
 
-(defgeneric generate-update (spec arg)
+(defgeneric generate-update (spec arg did-change)
   (:documentation
    "Generate the 'update' function of the cell defined by SPEC.
 
 The return value should be a single form implementing the function,
-with ARG being the symbol to use for the function argument."))
+with ARG being the symbol to use for the function argument.
+
+DID-CHANGE is the symbol identifying the variable holding the value of
+the 'did change' argument to the update call."))
+
+(defgeneric generate-did-change? (spec)
+  (:documentation
+   "Generate an expression which checks whether the value of the cell defined by SPEC has changed during the last update cycle.
+
+The expression should evaluate to true if the value of the cell may
+have changed, even if it has not necessarily changed, and should
+evaluate to NIL if it is known with certainty that the value of the
+cell has not changed."))
 
 
 ;;; Implementations
@@ -125,8 +139,8 @@ with ARG being the symbol to use for the function argument."))
 
        (incf ,changed-dependencies))))
 
-(defmethod generate-update ((spec observer-cell-spec) arg)
-  (with-slots (updating? stale? changed-dependencies) spec
+(defmethod generate-update ((spec observer-cell-spec) arg changed)
+  (with-slots (updating? stale? changed-dependencies did-change?) spec
     `(progn
        (when ,updating?
          (assert (plusp ,changed-dependencies)
@@ -137,27 +151,36 @@ with ARG being the symbol to use for the function argument."))
                   " in a given update cycle.~%~%"
                   "Unless this error originates from third-party code, this indicates a bug in live-cells-cl."))
 
+         (setf ,did-change? (or ,did-change? ,changed))
+
          (when (zerop (decf ,changed-dependencies))
-           ,@(awhen (generate-on-update spec)
-               `(,it))
+           (setf, stale? (or ,stale? ,did-change?))
+
+           ,@(with-gensyms (changed)
+               (awhen (generate-on-update spec changed)
+                 `((let ((,changed (and ,did-change? ,(generate-did-change? spec))))
+                     ,it))))
 
            (setf ,updating? nil)
 
            ,@(awhen (generate-post-update spec)
-               `(,it)))))))
+               `((when ,did-change?
+                   ,it))))))))
 
 (defmethod generate-on-will-update ((spec observer-cell-spec))
   (with-slots (notify-will-update) spec
     `(progn
        (,notify-will-update))))
 
-(defmethod generate-on-update ((spec observer-cell-spec))
+(defmethod generate-on-update ((spec observer-cell-spec) did-change)
   (with-slots (notify-update) spec
     `(progn
-       (,notify-update))))
+       (,notify-update :did-change ,did-change))))
 
 (defmethod generate-pre-update ((spec observer-cell-spec)) nil)
 (defmethod generate-post-update ((spec observer-cell-spec)) nil)
+
+(defmethod generate-did-change? ((spec observer-cell-spec)) t)
 
 (defmethod generate-cell-variables ((spec observer-cell-spec))
   (with-slots (stale? updating? changed-dependencies did-change?) spec
@@ -187,7 +210,7 @@ with ARG being the symbol to use for the function argument."))
 
 (defmethod generate-cell-functions ((spec observer-cell-spec))
   (with-slots (will-update update) spec
-    (with-gensyms (arg)
+    (with-gensyms (arg changed)
       (append
        (call-next-method)
 
@@ -201,5 +224,5 @@ with ARG being the symbol to use for the function argument."))
         (make-function-spec
          :name update
          :type :function
-         :lambda-list `(,arg)
-         :body (list (generate-update spec arg))))))))
+         :lambda-list `(,arg ,changed)
+         :body (list (generate-update spec arg changed))))))))

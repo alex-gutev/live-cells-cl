@@ -32,24 +32,32 @@
 
 (defmethod generate-watch-function ((spec watch-function-spec))
   (with-gensyms (updating?
+                 waiting-for-change?
                  will-update
                  update
                  watch
                  arguments
-                 arg)
+                 arg
+                 did-change)
 
     (with-slots (name body) spec
-      `(let ((,updating? nil) (,arguments (make-hash-set)))
+      `(let ((,updating? nil)
+             (,waiting-for-change? nil)
+             (,arguments (make-hash-set)))
          (labels ((,will-update (,arg)
                     (declare (ignore ,arg))
                     (when (not ,updating?)
-                      (setf ,updating? t)))
+                      (setf ,updating? t
+                            ,waiting-for-change? nil)))
 
-                  (,update (,arg)
+                  (,update (,arg ,did-change)
                     (declare (ignore ,arg))
-                    (when ,updating?
-                      (,watch)
-                      (setf ,updating? nil)))
+                    (when (or ,updating? (and ,did-change ,waiting-for-change?))
+                      (setf ,updating? nil
+                            ,waiting-for-change? (not ,did-change))
+
+                      (when ,did-change
+                        (,watch))))
 
                   (,watch ()
                     (with-tracker

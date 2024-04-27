@@ -126,9 +126,12 @@ ARG is the name of the symbol to use for the function argument.
 The return value should be a single form defining only the body of the
 function."))
 
-(defgeneric generate-notify-update (spec)
+(defgeneric generate-notify-update (spec did-change)
   (:documentation
    "Generate the function for notifying the observers of the cell defined by SPEC, that its value has changed.
+
+DID-CHANGE is the symbol identifying the variable holding the value of
+the did change argument.
 
 The return value should be a single form defining only the body of the
 function."))
@@ -215,12 +218,12 @@ function. If NIL is returned, no cleanup function is generated."))
          (doseq (,observer (map-keys ,observers))
            (call-will-update ,observer ,(generate-argument-record spec)))))))
 
-(defmethod generate-notify-update ((spec cell-spec))
+(defmethod generate-notify-update ((spec cell-spec) did-change)
   (with-slots (observers) spec
     (with-gensyms (observer)
       `(progn
          (doseq (,observer (map-keys ,observers))
-           (call-update ,observer ,(generate-argument-record spec)))))))
+           (call-update ,observer ,(generate-argument-record spec) ,did-change))))))
 
 (defmethod generate-cell-variables ((spec cell-spec))
   (with-slots (name
@@ -271,11 +274,12 @@ function. If NIL is returned, no cleanup function is generated."))
         :lambda-list `(,observer)
         :body (list (generate-remove-observer spec observer)))
 
-       (make-function-spec
-        :name notify-update
-        :type :function
-        :lambda-list ()
-        :body (list (generate-notify-update spec)))
+       (with-gensyms (did-change)
+         (make-function-spec
+          :name notify-update
+          :type :function
+          :lambda-list `(&key ((:did-change ,did-change) t))
+          :body (list (generate-notify-update spec did-change))))
 
        (make-function-spec
         :name notify-will-update
