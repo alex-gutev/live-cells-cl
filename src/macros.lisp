@@ -15,7 +15,7 @@
 
 (defmacro define-computed-cell% (name expression)
   (let ((spec (make-instance
-               'compute-cell-spec
+               'compute-changes-only-cell-spec
                :name name
                :init expression)))
 

@@ -25,6 +25,13 @@
    "Specification for a cell of which the value is a function of one
    or more argument cells."))
 
+(defclass compute-changes-only-cell-spec (compute-cell-spec changes-only-cell-spec)
+  ()
+
+  (:documentation
+   "Specification for a computed cell that only notifies its observers
+   when its new value is /= to its previous value."))
+
 (defgeneric generate-observer-record (spec)
   (:documentation
    "Generate the `OBSERVER' record for the cell defined by SPEC."))
