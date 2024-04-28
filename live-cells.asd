@@ -14,8 +14,11 @@
                  (:file "base-cell")
                  (:file "tracker")
                  (:file "observer-cell")
+                 (:file "changes-only-state")
                  (:file "computed-cell")
-                 (:file "watch-function"))))
+                 (:file "mutable-cell")
+                 (:file "watch-function")
+                 (:file "macros"))))
 
   :depends-on (:alexandria
                :anaphora
