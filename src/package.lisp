@@ -22,7 +22,8 @@
 
   (:export
    :defcell
-   :live)
+   :live
+   :cell-let)
 
   (:documentation
    "Provides the API for using live cells."))
