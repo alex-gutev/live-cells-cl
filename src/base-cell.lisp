@@ -9,15 +9,20 @@
   "The package in symbols identifying generated cell definitions are
 interned.")
 
+(defvar *global-cell-definition* t
+  "True when a cell is being defined in the global (NIL) environment.")
+
 (defun cell-symbol (name suffix)
   "Generate a new symbol for a cell definition.
 
 The format of the generated symbol is NAME-SUFFIX followed by random
-identifier. The symbol is interned in +CELL-DEF-PACKAGE+."
+identifier. The symbol is interned in +CELL-DEF-PACKAGE+ when
+*GLOBAL-CELL-DEFINITION* is true."
 
-  (-> (format-symbol nil "~a-~a" name suffix)
-      string
-      (gentemp +cell-def-package+)))
+  (let ((symb (format-symbol nil "~a-~a" name suffix)))
+    (if *global-cell-definition*
+        (gentemp (string symb) +cell-def-package+)
+        symb)))
 
 (defclass cell-spec ()
   ((name
@@ -104,6 +109,15 @@ Returns a list of `FUNCTION-SPEC's."))
    "Generate a form that references the value of the cell defined by
    SPEC, and track it as an argument."))
 
+(defgeneric generate-setf-expansion (spec)
+  (:documentation
+   "Generate the SETF expansion for the cell defined by SPEC.
+
+This function should return six values where the first is true if the
+value of the cell can be set with SETF with the remaining values
+defining the SETF expansion (as per DEFINE-SETF-EXPANSION) for the
+cell."))
+
 (defgeneric generate-argument-record (spec)
   (:documentation
    "Generate the `ARGUMENT' record for the cell defined by SPEC."))
@@ -170,6 +184,49 @@ The return value should be a single form defining only the body of the
 function. If NIL is returned, no cleanup function is generated."))
 
 
+;;; Referencing Cells
+
+(defmacro use-cell% (name value-form &optional setter)
+  "Reference the value of a cell while also allowing it to be set with SETF.
+
+When this macro appears as a form in an expression, it is equivalent
+to the form VALUE-FORM.
+
+When this macro appears as a place in SETF, the SETF expansion SETTER
+is used to set the value of the cell. SETTER is expected to be a list
+of five elements defining the SETF expansion for the cell, as per
+DEFINE-SETF-EXPANSION. Note, the return store and access form is
+wrapped in a LET which binds the temporary and store variables to the
+actual variables which were used. This allows the same expansion to be
+used even when the same place appears multiple times, in a single SETF
+expression.
+
+If SETTER is NIL or omitted, an error condition is signaled when this
+macro appears as a place in SETF."
+
+  (declare (ignore name setter))
+  value-form)
+
+(define-setf-expander use-cell% (name value-form &optional setter)
+  "Set the value of the cell according to the SETF expansion defined by SETTER."
+
+  (declare (ignore value-form))
+
+  (unless setter
+    (error "The value of cell ~a cannot be set with SETF." name))
+
+  (destructuring-bind (temp-vars value-forms store-vars store-form access-form)
+      setter
+
+    (values
+     temp-vars
+     value-forms
+     store-vars
+     store-form
+     access-form)))
+
+
+
 ;;; Implementations
 
 (defmethod generate-argument-record ((spec cell-spec))
@@ -211,6 +268,9 @@ function. If NIL is returned, no cleanup function is generated."))
           ,'(track-argument ,(generate-argument-record spec))
           ,',value))))
 
+(defmethod generate-setf-expansion ((spec cell-spec))
+  (values nil nil nil nil nil nil))
+
 (defmethod generate-notify-will-update ((spec cell-spec))
   (with-slots (observers) spec
     (with-gensyms (observer)
@@ -233,10 +293,11 @@ function. If NIL is returned, no cleanup function is generated."))
       spec
 
     (list
-     (make-variable-spec
-      :name name
-      :initform `(,value)
-      :type :symbol-macro)
+     (let ((setf-expansion (make-setf-expansion spec)))
+       (make-variable-spec
+        :name name
+        :initform `(use-cell% ,name (,value) ,setf-expansion)
+        :type :symbol-macro))
 
      (make-variable-spec
       :name value
@@ -302,3 +363,30 @@ function. If NIL is returned, no cleanup function is generated."))
             (map #'generate-function-definition))
 
      ,(generate-extra spec)))
+
+(defun make-setf-expansion (spec)
+  "Generate the SETF expansion for the cell defined by SPEC.
+
+This function generates the SETF expansion by calling
+GENERATE-SETF-EXPANSION and wrapping the returned store and access
+forms in a LET which binds the temporary and value variables to the
+actual variables used with GENSYM'd identifiers."
+
+  (multiple-value-bind
+        (can-setf? temp-vars value-forms store-vars store-form access-form)
+
+      (generate-setf-expansion spec)
+
+    (let ((new-temp-vars (gensyms temp-vars))
+          (new-store-vars (gensyms store-vars)))
+
+      (when can-setf?
+        (list new-temp-vars
+              value-forms
+              new-store-vars
+              `(let (,@(map #'list temp-vars new-temp-vars)
+                     ,@(map #'list store-vars new-store-vars))
+                 ,store-form)
+
+              `(let ,(map #'list temp-vars new-temp-vars)
+                 ,access-form))))))

@@ -9,11 +9,20 @@
   (:import-from
    :alexandria
    :with-gensyms
-   :format-symbol)
+   :format-symbol
+   :ensure-list
+   :compose
+   :curry
+   :rcurry)
 
   (:import-from
    :agutil
-   :defmacro!)
+   :defmacro!
+   :gensyms)
+
+  (:export
+   :defcell
+   :live)
 
   (:documentation
    "Provides the API for using live cells."))
