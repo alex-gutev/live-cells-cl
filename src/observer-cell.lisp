@@ -219,10 +219,12 @@ cell has not changed."))
          :name will-update
          :type :function
          :lambda-list `(,arg)
+         :declare `((ignorable ,arg))
          :body (list (generate-will-update spec arg)))
 
         (make-function-spec
          :name update
          :type :function
          :lambda-list `(,arg ,changed)
+         :declare `((ignorable ,arg))
          :body (list (generate-update spec arg changed))))))))

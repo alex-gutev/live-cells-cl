@@ -37,6 +37,9 @@ NAME is the symbol naming the function.
 
 LAMBDA-LIST is the function's lambda-list.
 
+DECLARE is a list of declarations applying to the function's
+environment.
+
 BODY is the list of forms comprising the function body.
 
 TYPE is one of the following keywords identifying the type of
@@ -52,6 +55,7 @@ definition:
 
   name
   lambda-list
+  declare
   body
   type)
 
@@ -90,6 +94,7 @@ definition:
   (with-accessors ((name function-spec-name)
                    (lambda-list function-spec-lambda-list)
                    (body function-spec-body)
+                   (decl function-spec-declare)
                    (type function-spec-type))
       spec
 
@@ -99,4 +104,5 @@ definition:
 
       ,name
       ,lambda-list
+      (declare ,@decl)
       ,@body)))
