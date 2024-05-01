@@ -86,3 +86,26 @@
 
         (is (= #(5 8 12) vs1))
         (is (= #(8 12) vs2))))))
+
+(test batch-updates
+  "Test that batch updates work correctly"
+
+  (cell-let ((a 0)
+             (b 0)
+             (op "")
+
+             (sum (+ a b))
+             (msg (format nil "~a ~a ~a = ~a" a op b sum)))
+
+    (with-observed-values msg (vs)
+      (batch
+        (setf a 1)
+        (setf b 2)
+        (setf op "+"))
+
+      (batch
+        (setf a 10)
+        (setf b -3)
+        (setf op "plus"))
+
+      (is (= #("1 + 2 = 3" "10 plus -3 = 7") vs)))))
