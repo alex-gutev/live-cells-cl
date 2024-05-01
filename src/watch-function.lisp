@@ -38,7 +38,8 @@
                  watch
                  arguments
                  arg
-                 did-change)
+                 did-change
+                 stop)
 
     (with-slots (name body) spec
       `(let ((,updating? nil)
@@ -71,6 +72,17 @@
                              (make-observer :key ',name
                                             :will-update #',will-update
                                             :update #',update))))
-                      ,@body
-                      )))
-           (,watch))))))
+                      ,@body))
+
+                  (,stop ()
+                    (doseq (,arg ,arguments)
+                      (call-remove-observer
+                       ,arg
+                       (make-observer :key ',name
+                                      :will-update #',will-update
+                                      :update #',update)))
+
+                    (clear ,arguments)
+                    nil))
+           (,watch)
+           #',stop)))))
