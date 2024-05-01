@@ -23,4 +23,23 @@
   :depends-on (:alexandria
                :anaphora
                :arrows
-               :generic-cl))
+               :generic-cl)
+
+  :in-order-to ((asdf:test-op (asdf:test-op :live-cells/test))))
+
+(asdf:defsystem #:live-cells/test
+  :description "Tests suites for live-cells"
+  :author "Alexander Gutev"
+  :license "MIT"
+  :depends-on (#:live-cells #:fiveam)
+  :serial t
+  :components ((:module
+                "test"
+                :serial t
+                :components
+                ((:file "package")
+                 (:file "test")
+                 (:file "mutable-cell"))))
+
+  :perform (asdf:test-op :after (op c)
+                         (uiop:symbol-call :live-cells/test :test-live-cells)))
