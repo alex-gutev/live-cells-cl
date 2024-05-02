@@ -15,6 +15,7 @@
                  (:file "tracker")
                  (:file "observer-cell")
                  (:file "changes-only-state")
+                 (:file "stop-compute")
                  (:file "computed-cell")
                  (:file "mutable-cell")
                  (:file "watch-function")

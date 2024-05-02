@@ -71,8 +71,12 @@ computes the value of the cell."))
           ,'(track-argument ,(generate-argument-record spec))
 
           (when ,',stale?
-            (setf ,',value (,',compute)
-                  ,',stale? nil))
+            (handler-case
+                (setf ,',value (,',compute))
+
+              (stop-computation () nil))
+
+            (setf ,',stale? nil))
 
           ,',value))))
 

@@ -157,3 +157,31 @@
   (cell-let ((cell (error 'test-cell-error)))
     (with-observed-values cell (vs)
       (signals test-cell-error cell))))
+
+(test none-preserves-value
+  "Test that using NONE preserves the value of the cell."
+
+  (cell-let ((a 0)
+             (evens (if (evenp a) a none)))
+
+    (with-observed-values evens (vs)
+      (setf a 1)
+      (setf a 2)
+      (setf a 3)
+      (setf a 4)
+      (setf a 5)
+
+      (is (= #(0 2 4))))))
+
+(test none-first-value
+  "Test using NONE when computing the first value of the cell"
+
+  (cell-let ((a 1)
+             (evens (if (evenp a) a none)))
+
+    (with-observed-values evens (vs)
+      (setf a 3)
+      (setf a 4)
+      (setf a 5)
+      (setf a 6)
+      (is (= #(4 6) vs)))))

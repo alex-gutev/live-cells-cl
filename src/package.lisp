@@ -24,7 +24,8 @@
    :defcell
    :live
    :cell-let
-   :batch)
+   :batch
+   :none)
 
   (:documentation
    "Provides the API for using live cells."))
