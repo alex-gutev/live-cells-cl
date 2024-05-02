@@ -1,6 +1,13 @@
 ;;;; Tests suite for computed cells
 
-(in-package :live-cells/test)
+(defpackage :live-cells/test-computed-cell
+  (:use
+   :generic-cl
+   :live-cells
+   :fiveam
+   :live-cells/test))
+
+(in-package :live-cells/test-computed-cell)
 
 ;;; Test Suite Definition
 

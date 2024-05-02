@@ -1,9 +1,13 @@
 ;;;; Test suite for mutable cells
 
-(in-package :live-cells/test)
+(defpackage :live-cells/test-mutable-cell
+  (:use
+   :generic-cl
+   :live-cells
+   :fiveam
+   :live-cells/test))
 
-
-;;; Test Suite Definition
+(in-package :live-cells/test-mutable-cell)
 
 (def-suite mutable-cell
   :description "Test basic mutable cells holding a non-computed value."
