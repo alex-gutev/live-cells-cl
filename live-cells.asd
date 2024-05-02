@@ -39,7 +39,8 @@
                 :components
                 ((:file "package")
                  (:file "test")
-                 (:file "mutable-cell"))))
+                 (:file "mutable-cell")
+                 (:file "computed-cell"))))
 
   :perform (asdf:test-op :after (op c)
                          (uiop:symbol-call :live-cells/test :test-live-cells)))

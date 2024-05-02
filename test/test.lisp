@@ -67,3 +67,9 @@ STOP-SYM are made available to the forms in BODY."
                 ,@body))
 
          (funcall (test-value-observer-stop ,observer))))))
+
+(define-condition test-cell-error (error)
+  ()
+
+  (:documentation
+   "Used for testing conditions signaled/raised inside computed cells."))
