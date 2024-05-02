@@ -12,6 +12,9 @@ interned.")
 (defvar *global-cell-definition* t
   "True when a cell is being defined in the global (NIL) environment.")
 
+(defvar *bind-init-form-p* t
+  "Should the variable holding the value of the cell be initialized to the cell's initform?")
+
 (defun cell-symbol (name suffix)
   "Generate a new symbol for a cell definition.
 
@@ -301,7 +304,7 @@ macro appears as a place in SETF."
 
      (make-variable-spec
       :name value
-      :initform init-form
+      :initform (when *bind-init-form-p* init-form)
       :type :param)
 
      (make-variable-spec

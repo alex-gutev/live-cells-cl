@@ -103,7 +103,8 @@ computes the value of the cell."))
       :initform '(make-hash-set)
       :type :variable)
 
-     (call-next-method))))
+     (let ((*bind-init-form-p* nil))
+       (call-next-method)))))
 
 (defmethod generate-cell-functions ((spec compute-cell-spec))
   (with-slots (compute) spec

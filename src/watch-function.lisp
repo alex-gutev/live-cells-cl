@@ -61,18 +61,22 @@
                         (,watch))))
 
                   (,watch ()
-                    (with-tracker
-                        ((,arg)
-                          (unless (memberp ,arg ,arguments)
-                            (->> (nadjoin ,arg ,arguments)
-                                 (setf ,arguments))
+                    (handler-case
+                        (with-tracker
+                            ((,arg)
+                              (unless (memberp ,arg ,arguments)
+                                (->> (nadjoin ,arg ,arguments)
+                                     (setf ,arguments))
 
-                            (call-add-observer
-                             ,arg
-                             (make-observer :key ',name
-                                            :will-update #',will-update
-                                            :update #',update))))
-                      ,@body))
+                                (call-add-observer
+                                 ,arg
+                                 (make-observer :key ',name
+                                                :will-update #',will-update
+                                                :update #',update))))
+                          ,@body)
+
+                      ;; TODO: Optionally print notice
+                      (condition () nil)))
 
                   (,stop ()
                     (doseq (,arg ,arguments)
