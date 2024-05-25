@@ -171,7 +171,7 @@
       (setf a 4)
       (setf a 5)
 
-      (is (= #(0 2 4))))))
+      (is (= #(2 4) vs)))))
 
 (test none-first-value
   "Test using NONE when computing the first value of the cell"
@@ -180,6 +180,8 @@
              (evens (if (evenp a) a none)))
 
     (with-observed-values evens (vs)
+      (is (null evens))
+
       (setf a 3)
       (setf a 4)
       (setf a 5)
