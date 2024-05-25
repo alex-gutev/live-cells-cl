@@ -42,7 +42,8 @@
                  (:file "test")
                  (:file "mutable-cell")
                  (:file "computed-cell")
-                 (:file "consistency"))))
+                 (:file "consistency")
+                 (:file "init-cleanup"))))
 
   :perform (asdf:test-op :after (op c)
                          (uiop:symbol-call :live-cells/test :test-live-cells)))

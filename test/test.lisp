@@ -73,3 +73,59 @@ STOP-SYM are made available to the forms in BODY."
 
   (:documentation
    "Used for testing conditions signaled/raised inside computed cells."))
+
+
+;;; Lifecycle test cell
+
+(defstruct lifecycle-counter
+  "Counts the number of times INIT and PAUSE have been called for a cell.
+
+INIT is the number of times INIT has been called, and PAUSE is the
+number of times PAUSE has been called."
+
+  (init 0)
+  (pause 0))
+
+(defclass lifecycle-counter-cell (cell-spec)
+  ((lifecycle-counter
+    :initarg :counter
+    :documentation
+    "Form evaluating to a `LIFECYCLE-COUNTER'"))
+
+  (:documentation
+   "A cell that counts the number of times it has been initialized and paused."))
+
+(defmethod generate-init ((spec lifecycle-counter-cell))
+  (with-slots (lifecycle-counter) spec
+    `(progn
+       ,(call-next-method)
+       (incf (lifecycle-counter-init ,lifecycle-counter)))))
+
+(defmethod generate-pause ((spec lifecycle-counter-cell))
+  (with-slots (lifecycle-counter) spec
+    `(progn
+       (incf (lifecycle-counter-pause ,lifecycle-counter))
+       ,(call-next-method))))
+
+(defmacro lifecycle-test-cell ((name value counter) &body body)
+  "Create a cell that counts how many times it has been initialized and paused.
+
+NAME is the name of the symbol to which the cell is bound. This is
+made available to the forms in BODY.
+
+VALUE is the constant value of the cell.
+
+COUNTER is a form that evaluates to a `LIFECYCLE-COUNTER'. This
+counter is used to keep track of how many times the cell has been
+initialized and paused."
+
+  (with-gensyms (counter-var)
+    `(let ((,counter-var ,counter))
+       ,(-> (make-instance
+              'lifecycle-counter-cell
+              :name name
+              :counter counter-var
+              :init value)
+
+             (make-local-cell-definition%
+              body)))))
