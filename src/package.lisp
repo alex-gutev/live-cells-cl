@@ -23,6 +23,7 @@
   (:export
    :defcell
    :live
+   :with-live-scope
    :cell-let
    :batch
    :none)

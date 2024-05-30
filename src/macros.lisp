@@ -22,8 +22,36 @@
     (generate-cell-definition spec)))
 
 (defmacro live (&body forms)
+  "Defines a live block consisting of FORMS.
+
+The FORMS are executed whenever the values of the cells referenced by
+them change, and are always evaluated once immediately before the LIVE
+form returns.
+
+Returns a function which when called, stops the live block for future
+cell value changes."
+
   (let ((spec (make-instance 'watch-function-spec :body forms)))
     (generate-watch-function spec)))
+
+(defmacro with-live-scope (&body body)
+  "Stop all live blocks defined in BODY on exiting the form.
+
+All live blocks, defined using LIVE, are stopped when exiting the
+dynamic extent defined by this form.
+
+Multiple WITH-LIVE-SCOPE forms can be nested, in which case each form
+stops the live blocks defined immediately within it."
+
+  (with-gensyms (stoppers forms global-live)
+    `(let ((,stoppers nil))
+       (macrolet ((,global-live (&body ,forms)
+                    (macroexpand `(live ,@,forms)))
+
+                  (live (&body ,forms)
+                    `(push (,',global-live ,@,forms) ,',stoppers)))
+         (unwind-protect (progn ,@body)
+           (foreach #'funcall ,stoppers))))))
 
 (defmacro cell-let ((&rest bindings) &body body &environment env)
   (flet ((make-cell-binding (binding form)
