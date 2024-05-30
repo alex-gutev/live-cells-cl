@@ -1,14 +1,14 @@
 ;;; Test suite checking that cells are initialized and cleaned up
 ;;; correctly.
 
-(defpackage :live-cells/init-cleanup
+(defpackage :live-cells/test-init-cleanup
   (:use
    :generic-cl
    :live-cells
    :fiveam
    :live-cells/test))
 
-(in-package :live-cells/init-cleanup)
+(in-package :live-cells/test-init-cleanup)
 
 ;;; Test Suite Definition
 

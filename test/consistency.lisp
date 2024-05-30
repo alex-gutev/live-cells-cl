@@ -1,14 +1,14 @@
 ;;;; Test suite checking that cells are updated consistently and
 ;;;; without glitches
 
-(defpackage :live-cells/consistency
+(defpackage :live-cells/test-consistency
   (:use
    :generic-cl
    :live-cells
    :fiveam
    :live-cells/test))
 
-(in-package :live-cells/consistency)
+(in-package :live-cells/test-consistency)
 
 ;;; Test Suite Definition
 
