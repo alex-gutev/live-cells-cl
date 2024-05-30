@@ -87,25 +87,6 @@ COLLECT are made available to the forms in BODY."
                       (nconcatenate ,values-sym (list ,value)))))
          ,@body))))
 
-(defmacro with-auto-stop (&body body)
-  "Stop all watch functions defined in BODY on exiting the form.
-
-All watch functions registered with BODY, using LIVE, are stopped when
-exiting the dynamic extent defined by this form.
-
-Multiple WITH-AUTO-STOP forms can be nested, in which case each form
-stops the watch functions defined immediately within it."
-
-  (with-gensyms (stoppers forms global-live)
-    `(let ((,stoppers nil))
-       (macrolet ((,global-live (&body ,forms)
-                    (macroexpand `(live ,@,forms)))
-
-                  (live (&body ,forms)
-                    `(push (,',global-live ,@,forms) ,',stoppers)))
-         (unwind-protect (progn ,@body)
-           (foreach #'funcall ,stoppers))))))
-
 (define-condition test-cell-error (error)
   ()
 

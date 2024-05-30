@@ -25,7 +25,7 @@
   (cell-let ((a 1)
              (b 2))
 
-    (with-auto-stop
+    (with-live-scope
       (with-watch-values (results collect)
         (live
           (collect (list a b)))
@@ -38,7 +38,7 @@
   (cell-let ((a 1)
              (b 2))
 
-    (with-auto-stop
+    (with-live-scope
       (with-watch-values (results collect)
         (live
           (collect (list a b)))
@@ -54,7 +54,7 @@
   (cell-let ((a 1)
              (b 2))
 
-    (with-auto-stop
+    (with-live-scope
       (with-watch-values (results collect)
         (live
           (collect (list a b)))
@@ -76,7 +76,7 @@
              (b 2)
              (select t))
 
-    (with-auto-stop
+    (with-live-scope
       (with-watch-values (results collect)
         (live
           (collect (if select a b)))
@@ -94,7 +94,7 @@
              (b 2))
 
     (with-watch-values (results collect)
-      (with-auto-stop
+      (with-live-scope
         (live
           (collect (list a b)))
 
@@ -111,7 +111,7 @@
 
   (let ((counter (make-lifecycle-counter)))
     (lifecycle-test-cell (cell 1 counter)
-      (with-auto-stop
+      (with-live-scope
         (live (list cell))
 
         (is (= 1 (lifecycle-counter-init counter)))
@@ -125,10 +125,10 @@
 
   (let ((counter (make-lifecycle-counter)))
     (lifecycle-test-cell (cell 1 counter)
-      (with-auto-stop
+      (with-live-scope
         (live (vector cell))
 
-        (with-auto-stop
+        (with-live-scope
           (live (list cell))
 
           (is (= 1 (lifecycle-counter-init counter)))
