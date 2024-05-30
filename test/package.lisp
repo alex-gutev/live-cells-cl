@@ -26,6 +26,8 @@
    :test-value-observer
    :observe-values
    :with-observed-values
+   :with-watch-values
+   :with-auto-stop
    :test-cell-error
    :lifecycle-test-cell
 

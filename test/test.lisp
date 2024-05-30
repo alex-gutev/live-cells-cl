@@ -68,6 +68,44 @@ STOP-SYM are made available to the forms in BODY."
 
          (funcall (test-value-observer-stop ,observer))))))
 
+(defmacro with-watch-values ((values-sym collect) &body body)
+  "Record the values of cells within watch functions
+
+The variable named by VALUES-SYM holds a vector containing the values
+accumulated with COLLECT.
+
+The function named by COLLECT accumulates the value passed to it into
+the vector held in VALUES-SYM.
+
+Both the variable named by VALUES-SYM and the function named by
+COLLECT are made available to the forms in BODY."
+
+  (with-gensyms (value)
+    `(let ((,values-sym (make-array 0 :adjustable t :fill-pointer t)))
+       (flet ((,collect (,value)
+                (setf ,values-sym
+                      (nconcatenate ,values-sym (list ,value)))))
+         ,@body))))
+
+(defmacro with-auto-stop (&body body)
+  "Stop all watch functions defined in BODY on exiting the form.
+
+All watch functions registered with BODY, using LIVE, are stopped when
+exiting the dynamic extent defined by this form.
+
+Multiple WITH-AUTO-STOP forms can be nested, in which case each form
+stops the watch functions defined immediately within it."
+
+  (with-gensyms (stoppers forms global-live)
+    `(let ((,stoppers nil))
+       (macrolet ((,global-live (&body ,forms)
+                    (macroexpand `(live ,@,forms)))
+
+                  (live (&body ,forms)
+                    `(push (,',global-live ,@,forms) ,',stoppers)))
+         (unwind-protect (progn ,@body)
+           (foreach #'funcall ,stoppers))))))
+
 (define-condition test-cell-error (error)
   ()
 
