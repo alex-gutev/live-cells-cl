@@ -33,11 +33,10 @@
   (cell-let ((a 1)
              (b (+ a 1)))
 
-    (with-observed-values b (vs)
+    (with-expected-values (b) (6)
       (setf a 5)
 
-      (is (= 6 b))
-      (is (= #(6) vs)))))
+      (is (= 6 b)))))
 
 (test recompute-on-1st-argument-change
   "Test that the value of the cell is reevaluated when the value of the 1st argument cell changes"
@@ -46,11 +45,10 @@
              (b 2)
              (c (+ a b)))
 
-    (with-observed-values c (vs)
+    (with-expected-values (c) (9)
       (setf a 7)
 
-      (is (= 9 c))
-      (is (= #(9) vs)))))
+      (is (= 9 c)))))
 
 (test recompute-on-2nd-argument-change
   "Test that the value of the cell is reevaluated when the value of the 2nd argument cell changes"
@@ -59,11 +57,10 @@
              (b 2)
              (c (+ a b)))
 
-    (with-observed-values c (vs)
+    (with-expected-values (c) (12)
       (setf b 11)
 
-      (is (= 12 c))
-      (is (= #(12) vs)))))
+      (is (= 12 c)))))
 
 (test observers-notified-when-arguments-change
   "Test that the observers of the cell are notified every time the value of an argument cell changes"
@@ -72,12 +69,10 @@
              (b 2)
              (c (+ a b)))
 
-    (with-observed-values c (vs)
+    (with-expected-values (c) (10 12 110)
       (setf a 8)
       (setf a 10)
-      (setf b 100)
-
-      (is (= #(10 12 110) vs)))))
+      (setf b 100))))
 
 (test observer-removal
   "Test that the observer of the cell is not called after it is removed."
@@ -86,14 +81,12 @@
              (b 2)
              (c (+ a b)))
 
-    (with-observed-values c (vs stop)
+    (with-expected-values (c stop) (10)
       (setf a 8)
       (stop)
 
       (setf b 10)
-      (setf a 100)
-
-      (is (= #(10) vs)))))
+      (setf a 100))))
 
 (test multiple-observers
   "Test that all observers are called when the value of the cell changes"
@@ -102,15 +95,12 @@
              (b 2)
              (c (+ a b)))
 
-    (with-observed-values c (vs1)
+    (with-expected-values (c) (10 18 110)
       (setf a 8)
 
-      (with-observed-values c (vs2)
+      (with-expected-values (c) (18 110)
         (setf b 10)
-        (setf a 100)
-
-        (is (= #(10 18 110) vs1))
-        (is (= #(18 110) vs2))))))
+        (setf a 100)))))
 
 (test conditional-arguments
   "Test computed cells with conditionally referenced arguments"
@@ -120,12 +110,10 @@
              (c 3)
              (d (if a b c)))
 
-    (with-observed-values d (vs)
+    (with-expected-values (d) (1 3 10)
       (setf b 1)
       (setf a nil)
-      (setf c 10)
-
-      (is (= #(1 3 10) vs)))))
+      (setf c 10))))
 
 (test computed-arguments
   "Test computed cells with arguments that are computed cells"
@@ -137,13 +125,11 @@
              (e 0)
              (f (+ d e)))
 
-    (with-observed-values f (vs)
+    (with-expected-values (f) (1 11 13 20)
       (setf b 1)
       (setf e 10)
       (setf a nil)
-      (setf c 10)
-
-      (is (= #(1 11 13 20) vs)))))
+      (setf c 10))))
 
 (test error-on-init
   "Test that conditions signaled during initial value computation are reproduced on access"
@@ -164,14 +150,12 @@
   (cell-let ((a 0)
              (evens (if (evenp a) a none)))
 
-    (with-observed-values evens (vs)
+    (with-expected-values (evens) (2 4)
       (setf a 1)
       (setf a 2)
       (setf a 3)
       (setf a 4)
-      (setf a 5)
-
-      (is (= #(2 4) vs)))))
+      (setf a 5))))
 
 (test none-first-value
   "Test using NONE when computing the first value of the cell"
@@ -179,11 +163,10 @@
   (cell-let ((a 1)
              (evens (if (evenp a) a none)))
 
-    (with-observed-values evens (vs)
+    (with-expected-values (evens) (4 6)
       (is (null evens))
 
       (setf a 3)
       (setf a 4)
       (setf a 5)
-      (setf a 6)
-      (is (= #(4 6) vs)))))
+      (setf a 6))))

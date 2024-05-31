@@ -44,54 +44,43 @@
   "Test that setting the value of a mutable cell results in its observers being called"
 
   (cell-let ((cell 15))
-    (with-observed-values cell (vs)
-      (setf cell 23)
-
-      (is (= #(23) vs)))))
+    (with-expected-values (cell) (23)
+      (setf cell 23))))
 
 (test multiple-set-calls-observers
   "Test that the observers of a mutable cell are called every time its value is set"
 
   (cell-let ((cell 15))
-    (with-observed-values cell (vs)
+    (with-expected-values (cell) (23 101)
       (setf cell 23)
-      (setf cell 101)
-
-      (is (= #(23 101) vs)))))
+      (setf cell 101))))
 
 (test observer-removal
   "Test that the observer of a mutable cell is not called after it is removed"
 
   (cell-let ((cell 15))
-    (with-observed-values cell (vs stop)
+    (with-expected-values (cell stop) (23)
       (setf cell 23)
       (stop)
-      (setf cell 101)
-
-      (is (= #(23) vs)))))
+      (setf cell 101))))
 
 (test set-equal-value
   "Test that observers are not called if the new value of the cell is equal to its previous value"
 
   (cell-let ((cell 56))
-    (with-observed-values cell (vs)
-      (setf cell 56)
-
-      (is (emptyp vs)))))
+    (with-expected-values (cell) ()
+      (setf cell 56))))
 
 (test all-observers-called
   "Test that all mutable cell observers are called when value changes"
 
   (cell-let ((cell 3))
-    (with-observed-values cell (vs1)
+    (with-expected-values (cell) (5 8 12)
       (setf cell 5)
 
-      (with-observed-values cell (vs2)
+      (with-expected-values (cell) (8 12)
         (setf cell 8)
-        (setf cell 12)
-
-        (is (= #(5 8 12) vs1))
-        (is (= #(8 12) vs2))))))
+        (setf cell 12)))))
 
 (test batch-updates
   "Test that batch updates work correctly"
@@ -103,7 +92,10 @@
              (sum (+ a b))
              (msg (format nil "~a ~a ~a = ~a" a op b sum)))
 
-    (with-observed-values msg (vs)
+    (with-expected-values (msg)
+        ("1 + 2 = 3"
+         "10 plus -3 = 7")
+
       (batch
         (setf a 1)
         (setf b 2)
@@ -112,6 +104,4 @@
       (batch
         (setf a 10)
         (setf b -3)
-        (setf op "plus"))
-
-      (is (= #("1 + 2 = 3" "10 plus -3 = 7") vs)))))
+        (setf op "plus")))))

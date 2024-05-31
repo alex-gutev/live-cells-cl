@@ -32,4 +32,6 @@
 
    :make-lifecycle-counter
    :lifecycle-counter-init
-   :lifecycle-counter-pause))
+   :lifecycle-counter-pause
+
+   :with-expected-values))

@@ -87,6 +87,23 @@ COLLECT are made available to the forms in BODY."
                       (nconcatenate ,values-sym (list ,value)))))
          ,@body))))
 
+(defmacro with-expected-values ((cell &optional stop-sym) (&rest expected) &body body)
+  "Test that CELL produces the EXPECTED values.
+
+This macro defines a unit test that checks that CELL (evaluated)
+produces a sequence of values that are equal to EXPECTED while
+evaluating the forms in BODY. Each element of EXPECTED is evaluated.
+
+If STOP-SYM is non-NIL it is the name of a symbol to which a function,
+of no arguments, is bound. When this function is called the remaining
+values produced by CELL are not recorded. In essence this removes the
+observer from the cell."
+
+  (with-gensyms (results)
+    `(with-observed-values ,cell (,results ,stop-sym)
+       (prog1 (progn ,@body)
+         (is (= (vector ,@expected) ,results))))))
+
 (define-condition test-cell-error (error)
   ()
 
