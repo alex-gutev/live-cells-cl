@@ -47,7 +47,7 @@ Computed Cells
 
 If the *value form* of a cell references another cell, a *computed cell*
 is created. The value of a *computed cell* is recomputed whenever the
-values of any of the *argument cells* referenced in the *value form*
+values of any of the *argument cells*, referenced in the *value form*,
 change.
 
 .. code-block::
@@ -72,9 +72,36 @@ value of ``SUM`` is recomputed automatically. This distinguishes cells
 from ordinary variables which keep the same value they are initialized
 with until it is explicitly changed with ``SETF``.
 
-..
-   Add a note explaining that computed cells cannot be SETF.
-   Add a note explaining that cells may be referenced even through functions.
+Argument cells may also be referenced indirectly by a function
+called from the *value form*.
+
+.. code-block::
+
+   (defcell delta 1)
+
+   ;; Inc references cell DELTA
+   (defun inc (n)
+     (+ n delta))
+
+   (defcell a 5)
+
+   ;; References both cell A and DELTA
+   (defcell sum (inc a))
+
+The ``SUM`` cell directly references cell ``A`` and indirectly
+references cell ``DELTA``, through the function ``INC``. Therefore,
+changing the value of ``DELTA``, will also result in the value of
+``SUM`` being recomputed.
+
+Example:
+
+.. code-block::
+
+   (setf a 6)
+   (pprint sum) ; Prints 7
+
+   (setf delta 3)
+   (pprint sum) ; Prints 9
 
 
 Observing Cells
@@ -153,7 +180,7 @@ being printed (the order in which the lines are printed may vary):
 
 .. code-block:: text
 
-   A = 20, B = 10
+   A = 20, B = 1
    A = 20
 
 An assignment to cell ``B``, such as:
@@ -219,8 +246,9 @@ form. :cl:macro:`BATCH`, like :cl:macro:`PROGN`, takes one or more
 forms, which are evaluated in sequence:
 
 The effect of this is that while the values of the cells are changed
-as soon as the `SETF` forms are evaluated, the observers are only
-notified after the last form in :cl:macro:`BATCH` has been evaluated.
+as soon as the `SETF` forms are evaluated, the observers (*live
+blocks* and *computed cells*) are only notified after the last form in
+:cl:macro:`BATCH` has been evaluated.
 
 .. code-block::
 
@@ -256,6 +284,23 @@ the second line:
 
 is printed after the :cl:macro:`BATCH` form is evaluated.
 
+:cl:macro:`BATCH` can be nested within another :cl:macro:`BATCH`,
+however the observers of the cells, which have their values changed
+within the batch, are only notified when exiting the outermost
+:cl:macro:`BATCH`.
+
+For example the following:
+
+.. code-block::
+
+   (batch
+     (batch
+       (setf a 20))
+
+     (setf b 100))
+
+only results in one line ``A = 20, B = 100`` being printed.
+     
 Local Cells
 -----------
 
