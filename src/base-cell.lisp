@@ -6,8 +6,8 @@
 ;;; Cell specification
 
 (defconstant +cell-def-package+ (find-package "LIVE-CELLS-CELL")
-  "The package in symbols identifying generated cell definitions are
-interned.")
+  "The package in which symbols identifying generated cell definitions
+are interned.")
 
 (defvar *global-cell-definition* t
   "True when a cell is being defined in the global (NIL) environment.")

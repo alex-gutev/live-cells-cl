@@ -60,6 +60,7 @@ For a more detailed explanation continue with this short tutorial.
 
    basics/cells.rst
    basics/cell-expressions.rst
+   reference.rst
 
 Indices and tables
 ==================
