@@ -45,15 +45,15 @@ optional argument to :cl:function:`NONE`, which defaults to ``NIL`` if
 no argument is given.
 
 The following definition of ``B`` ensures that it's value is
-initialized to ``10``, rather than ``NIL``, if the initial value of
-``A`` is greater than ``10``.
+initialized to ``1``, rather than ``NIL``, if the initial value of
+``A`` is greater than or equal to ``10``.
 
 .. code-block::
 
    (defcell b
      (if (< a 10)
          a
-	 (none 10)))
+	 (none 1)))
 
 .. attention::
 
