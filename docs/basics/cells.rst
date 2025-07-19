@@ -5,17 +5,20 @@ A cell is a container for a value that can be observed by one or more
 observers, which react to changes in the value. You'll see exactly what
 that means in a moment.
 
+All symbols introduced throughout this documentation are exported by
+the ``LIVE-CELLS`` package.
+
 Global cells can be defined with :cl:macro:`DEFCELL`:
 
 .. code-block::
 
    (defcell a-cell 1)
 
-The first argument ``a-cell`` is a symbol naming the cell and the
+The first argument ``A-CELL`` is a symbol naming the cell and the
 second argument is the *value form* that computes the value of the
 cell, the constant ``1`` in this case.
 
-The value of a cell is referenced by the symbol identifying it:
+The value of a cell is referenced using the symbol identifying it:
 
 .. code-block::
 
@@ -27,7 +30,7 @@ So far cells look just like variables.
 Setting the value of a cell
 ---------------------------
 
-The value of a cell can be set using ``SETF`` just like a variable.
+The value of a cell can be set using :cl:macro:`COMMON-LISP:SETF` just like a variable.
 
 .. code-block::
 
@@ -70,7 +73,7 @@ In this example ``SUM`` is a computed cell that references cells ``A``
 and ``B``. Whenever the value of either ``A`` or ``B`` is changed, the
 value of ``SUM`` is recomputed automatically. This distinguishes cells
 from ordinary variables which keep the same value they are initialized
-with until it is explicitly changed with ``SETF``.
+with until it is explicitly changed with :cl:macro:`COMMON-LISP:SETF`.
 
 Argument cells may also be referenced indirectly by a function
 called from the *value form*.
@@ -108,7 +111,7 @@ Observing Cells
 ---------------
 
 A cell can be observed with the :cl:macro:`LIVE` macro, which takes
-one or more forms, much like :cl:macro:`PROGN`, that are evaluated in
+one or more forms, much like :cl:macro:`COMMON-LISP:PROGN`, that are evaluated in
 sequence and may reference one or more argument cells. When the value
 of at least one argument cell changes, the entire *live block* is
 reevaluated, similar to how the value of a computed cell is
@@ -129,7 +132,7 @@ In this example a *live block* is defined that prints the values of
 cells ``A`` and ``B``. This block is evaluated once, when the ``LIVE``
 form is first evaluated, which results in the following being printed:
 
-.. code-block::
+.. code-block:: text
 
    A = 1, B = 2
 
@@ -241,14 +244,15 @@ Batch Updates
 -------------
 
 The values of multiple cells can be set simultaneously by wrapping the
-assignments (the :cl:macro:`SETF` forms) in a :cl:macro:`BATCH`
-form. :cl:macro:`BATCH`, like :cl:macro:`PROGN`, takes one or more
-forms, which are evaluated in sequence:
+assignments (the :cl:macro:`COMMON-LISP:SETF` forms) in a
+:cl:macro:`BATCH` form. :cl:macro:`BATCH`, like
+:cl:macro:`COMMON-LISP:PROGN`, takes one or more forms, which are
+evaluated in sequence:
 
 The effect of this is that while the values of the cells are changed
-as soon as the `SETF` forms are evaluated, the observers (*live
-blocks* and *computed cells*) are only notified after the last form in
-:cl:macro:`BATCH` has been evaluated.
+as soon as the :cl:macro:`COMMON-LISP:SETF` forms are evaluated, the
+observers (*live blocks* and *computed cells*) are only notified after
+the exiting the :cl:macro:`BATCH` form.
 
 .. code-block::
 
@@ -305,16 +309,16 @@ Local Cells
 -----------
 
 Cells local to a given lexical scope can be defined with
-:cl:macro:`CELL-LET`. Like :cl:macro:`LET`, the first argument is a
-list of bindings to establish followed by a list of body forms that
-are evaluated in order.
+:cl:macro:`CELL-LET`. Like :cl:macro:`COMMON-LISP:LET`, the first
+argument is a list of bindings to establish followed by a list of body
+forms that are evaluated in order.
 
 .. attention::
 
    All cells are lexically scoped, including global cells defined with
    :cl:macro:`DEFCELL`. This differs from global variables, defined
-   with :cl:macro:`DEFVAR` and :cl:macro:`DEPARAMETER`, which are
-   dynamically scoped.
+   with :cl:macro:`COMMON-LISP:DEFVAR` and
+   :cl:macro:`COMMON-LISP:DEFPARAMETER`, which are dynamically scoped.
 
 Each binding is of the form ``(CELL-NAME VALUE-FORM)`` where
 ``CELL-NAME`` is the name of the cell, which is made visible to
@@ -340,5 +344,5 @@ body forms of the :cl:macro:`CELL-LET`.
 
    Cells defined using :cl:macro:`CELL-LET` can reference cells
    defined earlier in the same :cl:macro:`CELL-LET`. This makes
-   :cl:macro:`CELL-LET` similar to :cl:macro:`LET*` rather than
-   :cl:macro:`LET`.
+   :cl:macro:`CELL-LET` more similar to :cl:macro:`COMMON-LISP:LET*`
+   than :cl:macro:`COMMON-LISP:LET`.

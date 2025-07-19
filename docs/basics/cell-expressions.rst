@@ -1,5 +1,8 @@
-Cell Expressions
+Cell Value Forms
 ================
+
+This page goes over some tools that can be used when writing the
+*value forms* of cells.
 
 Aborting a computation
 ----------------------
@@ -25,14 +28,14 @@ from being recomputed when a condition is not met.
    (pprint b) ; Prints 8
 
 In this example the computed cell ``B`` evaluates to the value of
-``A`` if it is less than ``10``. Otherwise it's current value is
+``A`` if it is less than ``10``. Otherwise its current value is
 preserved with ``(NONE)``. When the value of ``A`` is set to ``15``,
 ``B`` keeps its existing value ``8``.
 
 .. tip::
 
    The symbol :cl:symbol:`NONE` is equivalent to calling
-   :cl:function:`NONE` with no arguments. The definition of ``B`` can
+   :cl:function:`NONE` with no arguments. This definition of ``B`` can
    be rewritten as:
 
    .. code-block::
@@ -41,12 +44,12 @@ preserved with ``(NONE)``. When the value of ``A`` is set to ``15``,
 
 If :cl:function:`NONE` is called while computing the initial value of
 the cell, the cell is initialized to the value provided in the
-optional argument to :cl:function:`NONE`, which defaults to ``NIL`` if
+optional argument to :cl:function:`NONE`, which defaults to :cl:symbol:`COMMON-LISP:NIL` if
 no argument is given.
 
-The following definition of ``B`` ensures that it's value is
-initialized to ``1``, rather than ``NIL``, if the initial value of
-``A`` is greater than or equal to ``10``.
+The following definition of ``B`` ensures that its value is
+initialized to ``1``, rather than :cl:symbol:`COMMON-LISP:NIL`, if the
+initial value of ``A`` is greater than or equal to ``10``.
 
 .. code-block::
 
@@ -90,10 +93,10 @@ to be handled in cells directly using :cl:macro:`HANDLER-BIND` and
 In this example, cell ``N`` parses an integer from the string held in
 cell ``TEXT``. ``VALIDP`` is a computed cell that evaluates to true if
 the parsed integer, held in ``N``, is greater than ``0``. ``VALIDP``
-evaluates to :cl:symbol:`NIL` if ``N`` is less than ``0`` or an
-integer could not be parsed from the string held in ``TEXT``, that is
-a ``PARSE-ERROR`` condition was signaled while computing the value of
-``N``.
+evaluates to :cl:symbol:`COMMON-LISP:NIL` if ``N`` is less than ``0``
+or an integer could not be parsed from the string held in ``TEXT``,
+that is a :cl:symbol:`COMMON-LISP:PARSE-ERROR` condition was signaled
+while computing the value of ``N``.
 
 The following assignments:
 
@@ -112,3 +115,14 @@ result in the following being printed:
    The input "-1" is invalid
    The input "not a number" is invalid
    Valid
+
+.. note::
+
+   This example also demonstrates that
+
+   * Live blocks can reference cells conditionally. In this case
+     cell ``TEXT`` is only referenced when ``VALIDP`` is false.
+
+   * Computed cells, ``VALIDP`` in this example, can be observed just
+     like any other cell. In-fact, the live block doesn't care whether
+     a cell is computed cell or not.

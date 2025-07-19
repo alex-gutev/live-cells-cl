@@ -9,11 +9,15 @@ live-cells-cl documentation
 Live-Cells-CL is a library that adds reactive programming to lisp. The
 functionality of the library is ported from `Live Cells <https://livecell.gutev.dev/>`__ for Dart.
 
+The source code for this library is available on `Github`_.
+
+.. _Github: https://github.com/alex-gutev/live-cells-cl
+
 Examples
 --------
 
 Cells (reactive containers for data) are defined using
-:cl:macro:`defcell`.
+:cl:macro:`DEFCELL`.
 
 .. code-block::
 
@@ -28,14 +32,14 @@ cells:
    (defcell full-name
      (format nil "~a ~a" first-name last-name))
      
-Cells are observed with :cl:macro:`live`:
+Cells are observed with :cl:macro:`LIVE`:
 
 .. code-block::
 
    (live
      (format t "Hello ~a~%" full-name))
 
-Changing the value of a cell, using :cl:macro:`setf`, results in the
+Changing the value of a cell, using :cl:macro:`COMMON-LISP:SETF`, results in the
 `live block` being run:
 
 For example changing the values of ``FIRST-NAME`` and ``LAST-NAME``:

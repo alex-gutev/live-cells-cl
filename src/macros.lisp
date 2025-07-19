@@ -82,13 +82,18 @@ stops the live blocks defined immediately within it."
   "Define cells that are visible only to the forms in BODY.
 
 BINDINGS is a list of cell bindings to establish, similar to
-LET*. Each item in BINDINGS is a list of the form (NAME VALUE-FORM),
+LET*. Each item in BINDINGS is a list of the form
+
+.. code-block::
+
+   (NAME VALUE-FORM)
+
 where NAME is the symbol identifying the cell and VALUE-FORM is the
 value form of the cell. The cell can then be referenced within the
 forms in BODY by the symbol NAME.
 
-The cells defined in BINDINGS lexcially shadow those defined in the
-global environment, with DEFCELL, or by an enclosing CELL-LET
+The cells defined in BINDINGS lexcially shadow those in the
+environment defined with DEFCELL or by an enclosing CELL-LET
 form. Like LET* and unlike LET, each cell definition may reference the
 cells defined earlier in the same CELL-LET.
 
