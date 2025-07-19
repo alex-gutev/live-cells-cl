@@ -54,7 +54,7 @@ cell assignment batching in effect. This means that when the value of
 a mutable cell is set by SETF within the dynamic extent of the BATCH
 form, the observers of the cell are only notified after the last form
 in FORMS is evaluated, or the BATCH form is exited by a non-local exit
-such as by RETURN-FORM. The effect of this is that the cells appear to
+such as by RETURN-FROM. The effect of this is that the cells appear to
 have their values changed simultaneously, to their observers, that the
 values of the mutable cells are all set simultaneously.
 
