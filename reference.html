@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>API Reference &#8212; live-cells-cl 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d7e2fa82" />
+    <link rel="stylesheet" type="text/css" href="_static/cldomain.css?v=e67a0556" />
+    <script src="_static/documentation_options.js?v=01f34227"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Cell Value Forms" href="basics/cell-expressions.html" />
+   
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Lora:400' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+  </head><body>
+  
+  
+
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="basics/cell-expressions.html" title="Cell Value Forms"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">live-cells-cl 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">API Reference</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading">¶</a></h1>
+<p>The following symbols are exported by the <code class="docutils literal notranslate"><span class="pre">LIVE-CELLS</span></code> package.</p>
+<dl class="cl macro">
+<dt class="sig sig-object cl" id="macro:live-cells:defcell">
+<em class="property"><span class="pre">Macro</span> </em> (<span class="sig-name descname"><span class="pre">defcell</span></span> <em><span class="pre">name</span></em><span class="w"> </span> <em><span class="pre">value-form</span></em>)<a class="headerlink" href="#macro:live-cells:defcell" title="Link to this definition">¶</a></dt>
+<dd><p>Define a global cell identified by <code class="docutils literal notranslate"><span class="pre">NAME</span></code>.</p>
+<p>This macro defines a cell identified by <code class="docutils literal notranslate"><span class="pre">NAME</span></code> with its value computed
+by <code class="docutils literal notranslate"><span class="pre">VALUE-FORM</span></code>. The value of the cell can be referenced by the symbol
+<code class="docutils literal notranslate"><span class="pre">NAME</span></code> following the <a class="reference internal" href="#macro:live-cells:defcell" title="live-cells:defcell"><code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">DEFCELL</span></code></a> form.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">VALUE-FORM</span></code> is a constant, by <a class="reference external" href="http://www.lispworks.com/reference/HyperSpec/Body/f_consta.htm" title="(in Hyperspec)"><code class="docutils literal notranslate"><span class="pre">CONSTANTP</span></code></a>, a mutable cell is defined
+which can have its value set directly using <a class="reference external" href="http://www.lispworks.com/reference/HyperSpec/Body/a_setf.htm" title="(in Hyperspec)"><code class="docutils literal notranslate"><span class="pre">SETF</span></code></a> or <a class="reference external" href="http://www.lispworks.com/reference/HyperSpec/Body/s_setq.htm" title="(in Hyperspec)"><code class="docutils literal notranslate"><span class="pre">SETQ</span></code></a> on the symbol
+<code class="docutils literal notranslate"><span class="pre">NAME</span></code>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">VALUE-FORM</span></code> is not a constant a computed cell is created. <code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">A</span></code> computed
+cell may reference one or more argument cells in <code class="docutils literal notranslate"><span class="pre">VALUE-FORM</span></code> or a
+function called during the evaluation of <code class="docutils literal notranslate"><span class="pre">VALUE-FORM</span></code>.  When the values
+of any of the argument cells change, the value of the computed cell is
+recomputed by evaluating <code class="docutils literal notranslate"><span class="pre">VALUE-FORM</span></code> again. The referenced argument
+cells are determined automatically when the <code class="docutils literal notranslate"><span class="pre">VALUE-FORM</span></code> is evaluated.</p>
+<p>This macro creates a cell definition that is visible globally to all
+forms unless it is lexically shadowed by a definition with the same
+<code class="docutils literal notranslate"><span class="pre">NAME</span></code> using <a class="reference internal" href="#macro:live-cells:cell-let" title="live-cells:cell-let"><code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">CELL-LET</span></code></a>. Note that despite being visible globally, the
+cell definition is still lexically scoped and not dynamically scoped
+like global variables defined with <a class="reference external" href="http://www.lispworks.com/reference/HyperSpec/Body/m_defpar.htm" title="(in Hyperspec)"><code class="docutils literal notranslate"><span class="pre">DEFVAR</span></code></a> or <a class="reference external" href="http://www.lispworks.com/reference/HyperSpec/Body/m_defpar.htm" title="(in Hyperspec)"><code class="docutils literal notranslate"><span class="pre">DEFPARAMETER</span></code></a>.</p>
+</dd></dl>
+
+<dl class="cl macro">
+<dt class="sig sig-object cl" id="macro:live-cells:live">
+<em class="property"><span class="pre">Macro</span> </em> (<span class="sig-name descname"><span class="pre">live</span></span> <span class="lambda_keyword k"><span class="pre">&amp;body</span></span><span class="w"> </span> <em><span class="pre">forms</span></em>)<a class="headerlink" href="#macro:live-cells:live" title="Link to this definition">¶</a></dt>
+<dd><p>Define a live block consisting of <code class="docutils literal notranslate"><span class="pre">FORMS</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">FORMS</span></code> are evaluated once when the <a class="reference internal" href="#macro:live-cells:live" title="live-cells:live"><code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">LIVE</span></code></a> form is first evaluated,
+after which they are evaluated again whenever the values of the cells
+referenced by them change. Cells may be referenced either directly in
+<code class="docutils literal notranslate"><span class="pre">FORMS</span></code> or by a function called during the evaluation of <code class="docutils literal notranslate"><span class="pre">FORMS</span></code>.</p>
+<p>Returns a function which when called, stops the live block. Once
+stopped the live block will no longer be called when the values of the
+referenced cells change.</p>
+</dd></dl>
+
+<dl class="cl macro">
+<dt class="sig sig-object cl" id="macro:live-cells:cell-let">
+<em class="property"><span class="pre">Macro</span> </em> (<span class="sig-name descname"><span class="pre">cell-let</span></span> (<span class="lambda_keyword k"><span class="pre">&amp;rest</span></span><span class="w"> </span> <em><span class="pre">bindings</span></em>)<span class="w"> </span> <span class="lambda_keyword k"><span class="pre">&amp;body</span></span><span class="w"> </span> <em><span class="pre">body</span></em>)<a class="headerlink" href="#macro:live-cells:cell-let" title="Link to this definition">¶</a></dt>
+<dd><p>Define cells that are visible only to the forms in <code class="docutils literal notranslate"><span class="pre">BODY</span></code>.</p>
+<p><code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">BINDINGS</span></code> is a list of cell bindings to establish, similar to
+<a class="reference external" href="http://www.lispworks.com/reference/HyperSpec/Body/s_let_l.htm" title="(in Hyperspec)"><code class="docutils literal notranslate"><span class="pre">LET*</span></code></a>. Each item in <code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">BINDINGS</span></code> is a list of the form</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">NAME</span><span class="w"> </span><span class="nv">VALUE-FORM</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">NAME</span></code> is the symbol identifying the cell and <code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">VALUE-FORM</span></code> is the
+value form of the cell. The cell can then be referenced within the
+forms in <code class="docutils literal notranslate"><span class="pre">BODY</span></code> by the symbol <code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">NAME</span></code>.</p>
+<p>The cells defined in <code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">BINDINGS</span></code> lexcially shadow those in the
+environment defined with <a class="reference internal" href="#macro:live-cells:defcell" title="live-cells:defcell"><code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">DEFCELL</span></code></a> or by an enclosing <a class="reference internal" href="#macro:live-cells:cell-let" title="live-cells:cell-let"><code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">CELL-LET</span></code></a>
+form. Like <a class="reference external" href="http://www.lispworks.com/reference/HyperSpec/Body/s_let_l.htm" title="(in Hyperspec)"><code class="docutils literal notranslate"><span class="pre">LET*</span></code></a> and unlike <a class="reference external" href="http://www.lispworks.com/reference/HyperSpec/Body/s_let_l.htm" title="(in Hyperspec)"><code class="docutils literal notranslate"><span class="pre">LET</span></code></a>, each cell definition may reference the
+cells defined earlier in the same <a class="reference internal" href="#macro:live-cells:cell-let" title="live-cells:cell-let"><code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">CELL-LET</span></code></a>.</p>
+<p>The forms in <code class="docutils literal notranslate"><span class="pre">BODY</span></code> are evaluated in an implicit <a class="reference external" href="http://www.lispworks.com/reference/HyperSpec/Body/s_progn.htm" title="(in Hyperspec)"><code class="docutils literal notranslate"><span class="pre">PROGN</span></code></a>. The value
+returned by the last form is returned by the <a class="reference internal" href="#macro:live-cells:cell-let" title="live-cells:cell-let"><code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">CELL-LET</span></code></a> form.</p>
+</dd></dl>
+
+<dl class="cl macro">
+<dt class="sig sig-object cl" id="macro:live-cells:batch">
+<em class="property"><span class="pre">Macro</span> </em> (<span class="sig-name descname"><span class="pre">batch</span></span> <span class="lambda_keyword k"><span class="pre">&amp;body</span></span><span class="w"> </span> <em><span class="pre">forms</span></em>)<a class="headerlink" href="#macro:live-cells:batch" title="Link to this definition">¶</a></dt>
+<dd><p>Batch assignments to the values of mutable cells.</p>
+<p>The forms in <code class="docutils literal notranslate"><span class="pre">FORMS</span></code> are evaluated, in an implicit <a class="reference external" href="http://www.lispworks.com/reference/HyperSpec/Body/s_progn.htm" title="(in Hyperspec)"><code class="docutils literal notranslate"><span class="pre">PROGN</span></code></a>, with mutable
+cell assignment batching in effect. This means that when the value of
+a mutable cell is set by <a class="reference external" href="http://www.lispworks.com/reference/HyperSpec/Body/a_setf.htm" title="(in Hyperspec)"><code class="docutils literal notranslate"><span class="pre">SETF</span></code></a> within the dynamic extent of the <a class="reference internal" href="#macro:live-cells:batch" title="live-cells:batch"><code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">BATCH</span></code></a>
+form, the observers of the cell are only notified after the last form
+in <code class="docutils literal notranslate"><span class="pre">FORMS</span></code> is evaluated, or the <a class="reference internal" href="#macro:live-cells:batch" title="live-cells:batch"><code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">BATCH</span></code></a> form is exited by a non-local exit
+such as by <a class="reference external" href="http://www.lispworks.com/reference/HyperSpec/Body/s_ret_fr.htm" title="(in Hyperspec)"><code class="docutils literal notranslate"><span class="pre">RETURN-FROM</span></code></a>. The effect of this is that the cells appear to
+have their values changed simultaneously.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When a BATCH form is nested in the dynamic extent of another BATCH
+form, the nested BATCH form has no effect other than to evaluate
+FORMS. The observers of the cells are only notified when exiting
+the outermost BATCH form.</p>
+</div>
+<p>Returns the value of the last form in <code class="docutils literal notranslate"><span class="pre">FORMS</span></code>.</p>
+</dd></dl>
+
+<dl class="cl function">
+<dt class="sig sig-object cl" id="function:live-cells:none">
+<em class="property"><span class="pre">Function</span> </em> (<span class="sig-name descname"><span class="pre">none</span></span> <span class="lambda_keyword k"><span class="pre">&amp;optional</span></span><span class="w"> </span> <em><span class="pre">default-value</span></em>)<a class="headerlink" href="#function:live-cells:none" title="Link to this definition">¶</a></dt>
+<dd><p>Stop the computation of a cell’s value.</p>
+<p>When this function is called within the value form of cell, the
+computation of the cell’s value is stopped, the value form is exited
+and the cell’s current value is preserved.</p>
+<p>If this function is called while computing the initial value of a
+cell, the value of the cell is set to <code class="docutils literal notranslate"><span class="pre">DEFAULT-VALUE</span></code>.</p>
+<p>The symbol-macro <a class="reference internal" href="#function:live-cells:none" title="live-cells:none"><code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">NONE</span></code></a> is a synonym for <code class="docutils literal notranslate"><span class="pre">(NONE)</span></code>.</p>
+<p>This function works by signaling a <code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">STOP-COMPUTATION</span></code> condition, which
+is then handled by the cell. It is important that this condition is
+not handled by the value form of the cell, otherwise this function
+will have no effect.</p>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper"><h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation index</a><ul>
+      <li>Previous: <a href="basics/cell-expressions.html" title="previous chapter">Cell Value Forms</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/reference.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  
+  </body>
+</html>

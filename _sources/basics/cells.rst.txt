@@ -1,371 +1,348 @@
 Cells
 =====
 
-A cell is an object with a value and a set of observers that react to
-changes in its value. You'll see exactly what that means in a moment.
+A cell is a container for a value that can be observed by one or more
+observers, which react to changes in the value. You'll see exactly what
+that means in a moment.
 
-There are a number of ways to create cells. The simplest cell is the
-constant cell, created with the :any:`live_cells.value` function,
-which holds a constant value.
+All symbols introduced throughout this documentation are exported by
+the ``LIVE-CELLS`` package.
 
-.. code-block:: python
+Global cells can be defined with :cl:macro:`DEFCELL`:
 
-   import live_cells as lc
+.. code-block::
 
-   a = lc.value(1)
-   b = lc.value('hello world')
+   (defcell a-cell 1)
+
+The first argument ``A-CELL`` is a symbol naming the cell and the
+second argument is the *value form* that computes the value of the
+cell, the constant ``1`` in this case.
+
+The value of a cell is referenced using the symbol identifying it:
+
+.. code-block::
+
+   (pprint a-cell) ; Prints 1
 
 
-=============
-Mutable Cells
-=============
+So far cells look just like variables.
 
-Mutable cells, created with :any:`live_cells.mutable`, which takes
-the initial value of the cell, have a `value` property that can be set
-directly.
+Setting the value of a cell
+---------------------------
 
-.. code-block:: python
+The value of a cell can be set using :cl:macro:`COMMON-LISP:SETF` just like a variable.
 
-   import live_cells as lc
+.. code-block::
 
-   a = lc.mutable(0)
+   (defcell a 1)
 
-   print(a.value) # Prints 0
-
-   # Set the value of a to 3
-   a.value = 3
-   print(a.value) # Prints 3
-
-===============
-Observing Cells
-===============
-
-When the value of a cell changes, its observers are notified of the
-change. The simplest way to demonstrate this is to set up a *watch
-function* using :any:`live_cells.watch`:
-
-.. code-block:: python
-
-   import live_cells as lc
-
-   a = lc.mutable(0)
-   b = lc.mutable(1)
-
-   lc.watch(lambda: print(f'{a()}, {b()}'))
-
-   a.value = 5  # Prints 5, 1
-   b.value = 10 # Prints 5, 10
-
-:any:`live_cells.watch` takes a watch function and registers it to be
-called when the values of the cells referenced within it change. In
-the example above, a watch function that prints the values of cells
-``a`` and ``b`` is defined. This function is called automatically when the
-value of either ``a`` or ``b`` changes.
-
-There are a couple of points to keep in mind when using :any:`live_cells.watch`:
-
-* The watch function is called once immediately when
-  :any:`live_cells.watch` is called, to determine which cells are
-  referenced by it.
-
-* :any:`live_cells.watch` automatically tracks which cells are
-  referenced within the watch function and calls it when their values
-  change. This works even when the cells are referenced conditionally.
+   (setf a 2)
+   (pprint a) ; Prints 2
 
 .. attention::
 
-   Within a watch function, the values of cells are referenced using
-   the function call syntax, e.g. ``a()``, rather than accessing the
-   ``value`` property directly.
+   The value of a cell can only be set if its *value form* is a
+   compile time constant. Otherwise, it is assumed to be a *computed
+   cell*.
+   
+Computed Cells
+--------------
 
-Every call to :any:`live_cells.watch` adds a new watch function:
+If the *value form* of a cell references another cell, a *computed cell*
+is created. The value of a *computed cell* is recomputed whenever the
+values of any of the *argument cells*, referenced in the *value form*,
+change.
 
-.. code-block:: python
+.. code-block::
 
-   import live_cells as lc
+   (defcell a 1)
+   (defcell b 2)
 
-   a = lc.mutable(0)
-   b = lc.mutable(1)
+   ;; SUM is a computed cell referencing cells A and B
+   (defcell sum (+ a b))
 
-   lc.watch(lambda: print(f'{a()}, {b()}'))
-   lc.watch(lambda: print(f'A = {a()}'))
+   (pprint sum) ; Prints 3
 
-   # Prints: 20, 1
-   # Also prints: A = 20
-   a.value = 20
+   (setf a 5)
+   (pprint sum) ; Prints 7
 
-   # Prints 20, 10
-   b.value = 10
+   (setf b 10)
+   (pprint sum) ; Prints 15
 
-This results in the following being printed:
+In this example ``SUM`` is a computed cell that references cells ``A``
+and ``B``. Whenever the value of either ``A`` or ``B`` is changed, the
+value of ``SUM`` is recomputed automatically. This distinguishes cells
+from ordinary variables which keep the same value they are initialized
+with until it is explicitly changed with :cl:macro:`COMMON-LISP:SETF`.
+
+Argument cells may also be referenced indirectly by a function
+called from the *value form*.
+
+.. code-block::
+
+   (defcell delta 1)
+
+   ;; Inc references cell DELTA
+   (defun inc (n)
+     (+ n delta))
+
+   (defcell a 5)
+
+   ;; References both cell A and DELTA
+   (defcell sum (inc a))
+
+The ``SUM`` cell directly references cell ``A`` and indirectly
+references cell ``DELTA``, through the function ``INC``. Therefore,
+changing the value of ``DELTA``, will also result in the value of
+``SUM`` being recomputed.
+
+Example:
+
+.. code-block::
+
+   (setf a 6)
+   (pprint sum) ; Prints 7
+
+   (setf delta 3)
+   (pprint sum) ; Prints 9
+
+
+Observing Cells
+---------------
+
+A cell can be observed with the :cl:macro:`LIVE` macro, which takes
+one or more forms, much like :cl:macro:`COMMON-LISP:PROGN`, that are evaluated in
+sequence and may reference one or more argument cells. When the value
+of at least one argument cell changes, the entire *live block* is
+reevaluated, similar to how the value of a computed cell is
+recomputed.
+
+.. code-block::
+
+   (defcell a 1)
+   (defcell b 2)
+
+   ;; This LIVE block is run whenever the value of
+   ;; either A or B changes
+   
+   (live
+     (format t "A = ~a, B = ~a~%" a b))
+
+In this example a *live block* is defined that prints the values of
+cells ``A`` and ``B``. This block is evaluated once, when the ``LIVE``
+form is first evaluated, which results in the following being printed:
 
 .. code-block:: text
 
-  20, 1
-  A = 20
-  20, 20
+   A = 1, B = 2
 
-In this example, the second watch function only observes the value of
-``a``. Change the value of ``a`` results in both the first and second
-watch function being called. Changing the value of ``b`` results in
-only the first watch function being called, since the second watch
-function does not reference ``b`` and hence is not observing it.
+The block is evaluated again whenever the value of either ``A`` or
+``B`` changes.
 
-:any:`live_cells.watch` returns a watch *handle* (:any:`CellWatcher`),
-which provides a ``stop`` method that *deregisters* the watch
-function. When the ``stop`` method is called, the watch function is no
-longer called when the values of the cells it is observing change.
+The following:
 
-.. code-block:: python
+.. code-block::
 
-   import live_cells as lc
+   (setf a 5)
+   (setf b 10)
 
-   a = lc.mutable(0)
+results in the following two lines being printed:
 
-   watcher = lc.watch(lambda: print(f'A = {a()}'))
+.. code-block:: text
 
-   # Prints A = 1
-   a.value = 1
+   A = 5, B = 1
+   A = 5, B = 10
 
-   # Prints A = 2
-   a.value = 2
+Each :cl:macro:`LIVE` form creates a new *live block* that observes only those
+cells referenced by the forms within it.
 
-   watcher.stop()
+.. code-block::
 
-   # Doesn't print anything
-   a.value = 3
+   (defcell a 0)
+   (defcell b 1)
+
+   (live
+     (format t "A = ~a, B = ~a~%" a b))
+
+   (live
+     (format t "A = ~a~%" a))
+
+In this example two *live blocks* are created. The first *live block*
+observes cells ``A`` and ``B`` while the second block only observes
+cell ``A``.
+
+An assignment to cell ``A``, such as:
+
+.. code-block::
+
+   (setf a 20)
 
 
-.. tip::
+causes both blocks to be evaluated resulting in the following lines
+being printed (the order in which the lines are printed may vary):
 
-   A watch function with more than one expression can be defined by
-   using :any:`live_cells.watch` as a decorator:
+.. code-block:: text
 
-   .. code-block:: python
+   A = 20, B = 1
+   A = 20
 
-      import live_cells as lc
+An assignment to cell ``B``, such as:
 
-      a = lc.mutable(0)
+.. code-block::
 
-      @lc.watch
-      def watcher():
-          print(f'A = {a()}')
-	  print(f'A + 1 = {a() + 1}')
+   (setf b 10)
 
-      # Prints:
-      #   A = 2
-      #   A + 1 = 3
-      
-      a.value = 2
+causes only the first block to be evaluated, since the second block is
+not observing cell ``B``. This results in only one line being printed:
 
-  The decorated function is registered as a watch function that
-  observes the cells referenced within it. The watch handle can be
-  accessed by the name of the decorated function. For example, the
-  watch function in the previous example can be stopped with the
-  following:
+.. code-block:: text
 
-  .. code-block:: python
+   A = 20, B = 10
 
-     watcher.stop()
+Stopping Observers
+~~~~~~~~~~~~~~~~~~
 
-:any:`live_cells.watch` also takes an optional ``schedule`` argument,
-which if not *None* is a function that is called when the watch
-function should be called, with the watch callback passed as an
-argument. The ``schedule`` function should *schedule* the callback
-function to it, to be called at a later stage. If ``schedule`` is
-*None*, the watch function is called immediately when the cells
-referenced within it change.
+The :cl:macro:`LIVE` macro returns a function of zero arguments that,
+when called, stops the *live block*. Once a *live block* is stopped it
+is no longer run when the values of the cells referenced within it
+change.
 
-.. code-block:: python
+.. code-block::
 
-   import gevent
-   import live_cells as lc
+   (defcell a 0)
 
-   a = lc.mutable()
+   (let ((stop (live
+                (format t "A = ~a~%"))))
+		
+     (setf a 1) ; Prints A = 1
+     (setf a 2) ; Prints A = 2
 
-   @lc.watch(schedule=gevent.spawn)
-   def watch():
-       print(f'{a()}')
+     ;; Stop the live block
+     (funcall stop)
 
-In this example a watch function observing cell ``a`` is defined. When
-the value of ``a`` changes, the watch function is not called
-immediately but is scheduled to run on a `gevent
-<http://www.gevent.org/>`_ green thread, using ``gevent.spawn``.
+     (setf a 3)) ; Doesn't print anything
+   
+
+In this example the *live block* is stopped after two assignments to
+cell ``A``. This results in the following lines being printed:
+
+.. code-block:: text
+
+   A = 0
+   A = 1
+   A = 2
+
+.. note::
+
+   The first line ``A = 0`` is printed when the :cl:macro:`LIVE` form
+   is first evaluated.
+   
+The third assignment ``(setf a 3)`` doesn't cause the block to run
+because the stop function has been called.
+
+Batch Updates
+-------------
+
+The values of multiple cells can be set simultaneously by wrapping the
+assignments (the :cl:macro:`COMMON-LISP:SETF` forms) in a
+:cl:macro:`BATCH` form. :cl:macro:`BATCH`, like
+:cl:macro:`COMMON-LISP:PROGN`, takes one or more forms, which are
+evaluated in sequence:
+
+The effect of this is that while the values of the cells are changed
+as soon as the :cl:macro:`COMMON-LISP:SETF` forms are evaluated, the
+observers (*live blocks* and *computed cells*) are only notified after
+the exiting the :cl:macro:`BATCH` form.
+
+.. code-block::
+
+   (defcell a 0)
+   (defcell b 1)
+
+   (live
+     (format t "A = ~a, B = ~a~%" a b))
+
+   ;; Only prints: A = 15, B = 3
+   (batch
+     (setf a 15)
+     (setf b 3))
+
+In this example the values of ``A`` and ``B`` are set to ``15`` and
+``3``, respectively, within :cl:macro:`BATCH`. This causes the *live
+block*, which prints the values of ``A`` and ``B``, to run once after
+the value of ``B`` is set to ``3``. The first assignment ``(setf a
+15)`` **DOES NOT** cause the *live block* to run.
+
+Only two lines are printed. The first line:
+
+.. code-block:: text
+
+   A = 0, B = 1
+
+is printed when the :cl:macro:`LIVE` form is first evaluated, while
+the second line:
+
+.. code-block:: text
+
+   A = 15, B = 3
+
+is printed after the :cl:macro:`BATCH` form is evaluated.
+
+:cl:macro:`BATCH` can be nested within another :cl:macro:`BATCH`,
+however the observers of the cells, which have their values changed
+within the batch, are only notified when exiting the outermost
+:cl:macro:`BATCH`.
+
+For example the following:
+
+.. code-block::
+
+   (batch
+     (batch
+       (setf a 20))
+
+     (setf b 100))
+
+only results in one line ``A = 20, B = 100`` being printed.
+     
+Local Cells
+-----------
+
+Cells local to a given lexical scope can be defined with
+:cl:macro:`CELL-LET`. Like :cl:macro:`COMMON-LISP:LET`, the first
+argument is a list of bindings to establish followed by a list of body
+forms that are evaluated in order.
+
+.. attention::
+
+   All cells are lexically scoped, including global cells defined with
+   :cl:macro:`DEFCELL`. This differs from global variables, defined
+   with :cl:macro:`COMMON-LISP:DEFVAR` and
+   :cl:macro:`COMMON-LISP:DEFPARAMETER`, which are dynamically scoped.
+
+Each binding is of the form ``(CELL-NAME VALUE-FORM)`` where
+``CELL-NAME`` is the name of the cell, which is made visible to
+the body forms, and ``VALUE-FORM`` is the cell value form.
+
+.. code-block::
+
+   (cell-let ((a 1)
+              (b 2)
+	      (sum (+ a b)))
+     (live
+       (format t "A + B = ~a~%" sum))
+
+     (setf a 3)
+     ...)
+
+In this example three local cells are defined ``A``, ``B`` and a
+computed cell ``SUM``. These cells can be used just like global cells
+defined with :cl:macro:`DEFCELL`, however they are only visible to the
+body forms of the :cl:macro:`CELL-LET`.
 
 .. important::
 
-   The watch function sees the values of the cells, which are
-   referenced within it, as they are at the time the ``schedule``
-   function is called and not at the time when the watch function is
-   actually run. This guarantees that the watch function will not
-   "miss" updates if it runs after the values of the cells are changed
-   again.
-
-==============
-Computed Cells
-==============
-
-A *computed cell* is a cell with a value that is defined as a function
-of the values of one or more argument cells. Whenever the value of an
-argument cell changes, the value of the computed cell is recomputed.
-
-Computed cells are defined using :any:`live_cells.computed`, which
-takes the value computation function of the cell:
-
-.. code-block:: python
-
-   import live_cells as lc
-
-   a = lc.mutable(1)
-   b = lc.mutable(2)
-
-   sum = lc.computed(lambda: a() + b())
-
-In this example, ``sum`` is a computed cell with the value defined as
-the sum of cells ``a`` and ``b``. The value of ``sum`` is recomputed
-whenever the value of either ``a`` or ``b`` changes. This is
-demonstrated below:
-
-.. code-block:: python
-
-   lc.watch(lambda: print(f'The sum is {sum()}'))
-
-   a.value = 3 # Prints: The sum is 5
-   b.value = 4 # Prints: The sum is 7
-
-In this example:
-
-#. A watch function observing the ``sum`` cell is defined.
-#. The value of ``a`` is set to ``3``, which:
-
-   #. Causes the value of ``sum`` to be recomputed.
-   #. Calls the watch function defined in 1.
-
-#. The value of ``b`` is set to ``4``, which likewise also results in
-   the value of ``sum`` being recomputed and the watch function being
-   called.
-
-.. tip::
-
-   A computed cell with more than one expression can be defined by
-   using :any:`live_cells.computed` as a decorator:
-
-
-   .. code-block:: python
-
-      import live_cells as lc
-
-      n = lc.mutable(2)
-
-      @lc.computed
-      def factorial_n():
-          result = 1
-
-	  while n() > 1:
-	    result *= n
-	    n -= 1
-	  
-	  return result
-
-      lc.watch(lambda: print(f'n! = {factorial_n()}'))
-
-   The computed cell is defined with the decorated function as the
-   compute function. The cell can then be referenced using the name of
-   the decorated function.
-
-The :any:`live_cells.computed` function takes a ``changes_only``
-argument which allows you to control whether the computed cell
-notifies its observers if its value hasn't changed after a
-recomputation. By default this is ``False``, which means the computed
-cell notifies its observers whenever it is recomputed. If
-``changes_only`` is ``True``, the cell only notifies its observers if
-the new value of the cell is not equal to its previous value.
-
-This is demonstrated with the following example:
-
-.. code-block:: python
-
-   import live_cells as lc
-
-   a = lc.mutable(0)
-   b = lc.computed(lambda: a % 2, changes_only=True)
-
-   lc.watch(lambda: print(f'{b()}'))
-
-   a.value = 1
-   a.value = 3
-   a.value = 5
-   a.value = 6
-   a.value = 8
-
-This results in the following being printed to standard output:
-
-.. code-block:: text
-
-   0
-   1
-   0
-
-Notice that only three lines are printed to standard output, even
-though the value of the computed cell argument ``a`` was changed five
-times.
-
-If ``changes_only=True`` is omitted from the definition of ``b``, the
-following is printed to standard output:
-
-.. code-block:: text
-
-   0
-   1
-   1
-   1
-   0
-   0
-
-Notice that a new line is printed to standard output whenever the
-value of ``a``, which is an argument of ``b`` is changed. This is
-because ``b`` notifies its observers whenever the value of its
-argument ``a`` has changed, even if ``b``\ 's new value is equal to
-its previous value.
-   
-=============
-Batch Updates
-=============
-
-The values of multiple mutable cells can be set simultaneously in a
-*batch update*. The effect of this is that while the values of the
-cells are changed on setting the ``value`` property, the observers of
-the cells are only notified after all the cell values have been set.
-
-Batch updates are performed using the :any:`live_cells.batch` context
-manager:
-
-.. code-block:: python
-
-   import live_cells as lc
-
-   a = lc.mutable(0)
-   b = lc.mutable(1)
-
-   lc.watch(lambda: print(f'a = {a()}, b = {b()}'))
-
-   # This only prints: a = 15, b = 3
-   with lc.batch():
-       a.value = 15
-       b.value = 3
-
-In the example above, the values of ``a`` and ``b`` are set to ``15``
-and ``3`` respectively, with a *batch update*. The watch function,
-which observes both ``a`` and ``b`` is only called once when exiting
-the context managed by :any:`live_cells.batch`.
-
-As a result the following is printed:
-
-.. code-block:: text
-
-   a = 0, b = 1
-   a = 15, b = 3
-
-#. ``a = 0, b = 1`` is printed when the watch function is first defined.
-#. ``a = 15, b = 3`` is printed when exiting the context managed by
-   :any:`live_cells.batch`.
+   Cells defined using :cl:macro:`CELL-LET` can reference cells
+   defined earlier in the same :cl:macro:`CELL-LET`. This makes
+   :cl:macro:`CELL-LET` more similar to :cl:macro:`COMMON-LISP:LET*`
+   than :cl:macro:`COMMON-LISP:LET`.

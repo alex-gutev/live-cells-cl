@@ -1,442 +1,388 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
-<head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cells &mdash; Live Cells Python 0.2.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b1f64a84"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
-    <script src="../_static/js/theme.js"></script>
+    <title>Cells &#8212; live-cells-cl 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d7e2fa82" />
+    <link rel="stylesheet" type="text/css" href="../_static/cldomain.css?v=e67a0556" />
+    <script src="../_static/documentation_options.js?v=01f34227"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Cell Expressions" href="cell-expressions.html" />
-    <link rel="prev" title="Welcome to Live Cells Python’s documentation!" href="../index.html" /> 
-</head>
+    <link rel="next" title="Cell Value Forms" href="cell-expressions.html" />
+    <link rel="prev" title="live-cells-cl documentation" href="../index.html" />
+   
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Lora:400' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+  </head><body>
+  
+  
 
-          
-          
-          <a href="../index.html" class="icon icon-home">
-            Live Cells Python
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Cells</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#mutable-cells">Mutable Cells</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#observing-cells">Observing Cells</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#computed-cells">Computed Cells</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#batch-updates">Batch Updates</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="cell-expressions.html">Cell Expressions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="asyncio.html">Integration with Asyncio</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pitfalls.html">Pitfalls</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">live_cells</a></li>
-</ul>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="cell-expressions.html" title="Cell Value Forms"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="live-cells-cl documentation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">live-cells-cl 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Cells</a></li> 
+      </ul>
+    </div>  
 
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">Live Cells Python</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Cells</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/basics/cells.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
   <section id="cells">
-<h1>Cells<a class="headerlink" href="#cells" title="Permalink to this heading"></a></h1>
-<p>A cell is an object with a value and a set of observers that react to
-changes in its value. You’ll see exactly what that means in a moment.</p>
-<p>There are a number of ways to create cells. The simplest cell is the
-constant cell, created with the <a class="reference internal" href="../live_cells.html#live_cells.value" title="live_cells.value"><code class="xref any py py-func docutils literal notranslate"><span class="pre">live_cells.value</span></code></a> function,
-which holds a constant value.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">live_cells</span> <span class="k">as</span> <span class="nn">lc</span>
-
-<span class="n">a</span> <span class="o">=</span> <span class="n">lc</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">lc</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="s1">&#39;hello world&#39;</span><span class="p">)</span>
+<h1>Cells<a class="headerlink" href="#cells" title="Link to this heading">¶</a></h1>
+<p>A cell is a container for a value that can be observed by one or more
+observers, which react to changes in the value. You’ll see exactly what
+that means in a moment.</p>
+<p>All symbols introduced throughout this documentation are exported by
+the <code class="docutils literal notranslate"><span class="pre">LIVE-CELLS</span></code> package.</p>
+<p>Global cells can be defined with <a class="reference internal" href="../reference.html#macro:live-cells:defcell" title="live-cells:defcell"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">DEFCELL</span></code></a>:</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">a-cell</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
-<section id="mutable-cells">
-<h2>Mutable Cells<a class="headerlink" href="#mutable-cells" title="Permalink to this heading"></a></h2>
-<p>Mutable cells, created with <a class="reference internal" href="../live_cells.html#live_cells.mutable" title="live_cells.mutable"><code class="xref any py py-func docutils literal notranslate"><span class="pre">live_cells.mutable</span></code></a>, which takes
-the initial value of the cell, have a <cite>value</cite> property that can be set
-directly.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">live_cells</span> <span class="k">as</span> <span class="nn">lc</span>
+<p>The first argument <code class="docutils literal notranslate"><span class="pre">A-CELL</span></code> is a symbol naming the cell and the
+second argument is the <em>value form</em> that computes the value of the
+cell, the constant <code class="docutils literal notranslate"><span class="pre">1</span></code> in this case.</p>
+<p>The value of a cell is referenced using the symbol identifying it:</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nb">pprint</span><span class="w"> </span><span class="nv">a-cell</span><span class="p">)</span><span class="w"> </span><span class="c1">; Prints 1</span>
+</pre></div>
+</div>
+<p>So far cells look just like variables.</p>
+<section id="setting-the-value-of-a-cell">
+<h2>Setting the value of a cell<a class="headerlink" href="#setting-the-value-of-a-cell" title="Link to this heading">¶</a></h2>
+<p>The value of a cell can be set using <a class="reference external" href="http://www.lispworks.com/reference/HyperSpec/Body/a_setf.htm" title="(in Hyperspec)"><code class="docutils literal notranslate"><span class="pre">SETF</span></code></a> just like a variable.</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
 
-<span class="n">a</span> <span class="o">=</span> <span class="n">lc</span><span class="o">.</span><span class="n">mutable</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">pprint</span><span class="w"> </span><span class="nv">a</span><span class="p">)</span><span class="w"> </span><span class="c1">; Prints 2</span>
+</pre></div>
+</div>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>The value of a cell can only be set if its <em>value form</em> is a
+compile time constant. Otherwise, it is assumed to be a <em>computed
+cell</em>.</p>
+</div>
+</section>
+<section id="computed-cells">
+<h2>Computed Cells<a class="headerlink" href="#computed-cells" title="Link to this heading">¶</a></h2>
+<p>If the <em>value form</em> of a cell references another cell, a <em>computed cell</em>
+is created. The value of a <em>computed cell</em> is recomputed whenever the
+values of any of the <em>argument cells</em>, referenced in the <em>value form</em>,
+change.</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="c1"># Prints 0</span>
+<span class="c1">;; SUM is a computed cell referencing cells A and B</span>
+<span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">sum</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="p">))</span>
 
-<span class="c1"># Set the value of a to 3</span>
-<span class="n">a</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="c1"># Prints 3</span>
+<span class="p">(</span><span class="nb">pprint</span><span class="w"> </span><span class="nv">sum</span><span class="p">)</span><span class="w"> </span><span class="c1">; Prints 3</span>
+
+<span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">pprint</span><span class="w"> </span><span class="nv">sum</span><span class="p">)</span><span class="w"> </span><span class="c1">; Prints 7</span>
+
+<span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">pprint</span><span class="w"> </span><span class="nv">sum</span><span class="p">)</span><span class="w"> </span><span class="c1">; Prints 15</span>
+</pre></div>
+</div>
+<p>In this example <code class="docutils literal notranslate"><span class="pre">SUM</span></code> is a computed cell that references cells <code class="docutils literal notranslate"><span class="pre">A</span></code>
+and <code class="docutils literal notranslate"><span class="pre">B</span></code>. Whenever the value of either <code class="docutils literal notranslate"><span class="pre">A</span></code> or <code class="docutils literal notranslate"><span class="pre">B</span></code> is changed, the
+value of <code class="docutils literal notranslate"><span class="pre">SUM</span></code> is recomputed automatically. This distinguishes cells
+from ordinary variables which keep the same value they are initialized
+with until it is explicitly changed with <a class="reference external" href="http://www.lispworks.com/reference/HyperSpec/Body/a_setf.htm" title="(in Hyperspec)"><code class="docutils literal notranslate"><span class="pre">SETF</span></code></a>.</p>
+<p>Argument cells may also be referenced indirectly by a function
+called from the <em>value form</em>.</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">delta</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1">;; Inc references cell DELTA</span>
+<span class="p">(</span><span class="nb">defun</span><span class="w"> </span><span class="nv">inc</span><span class="w"> </span><span class="p">(</span><span class="nv">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="nv">delta</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c1">;; References both cell A and DELTA</span>
+<span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">sum</span><span class="w"> </span><span class="p">(</span><span class="nv">inc</span><span class="w"> </span><span class="nv">a</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">SUM</span></code> cell directly references cell <code class="docutils literal notranslate"><span class="pre">A</span></code> and indirectly
+references cell <code class="docutils literal notranslate"><span class="pre">DELTA</span></code>, through the function <code class="docutils literal notranslate"><span class="pre">INC</span></code>. Therefore,
+changing the value of <code class="docutils literal notranslate"><span class="pre">DELTA</span></code>, will also result in the value of
+<code class="docutils literal notranslate"><span class="pre">SUM</span></code> being recomputed.</p>
+<p>Example:</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">pprint</span><span class="w"> </span><span class="nv">sum</span><span class="p">)</span><span class="w"> </span><span class="c1">; Prints 7</span>
+
+<span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">delta</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">pprint</span><span class="w"> </span><span class="nv">sum</span><span class="p">)</span><span class="w"> </span><span class="c1">; Prints 9</span>
 </pre></div>
 </div>
 </section>
 <section id="observing-cells">
-<h2>Observing Cells<a class="headerlink" href="#observing-cells" title="Permalink to this heading"></a></h2>
-<p>When the value of a cell changes, its observers are notified of the
-change. The simplest way to demonstrate this is to set up a <em>watch
-function</em> using <a class="reference internal" href="../live_cells.html#live_cells.watch" title="live_cells.watch"><code class="xref any py py-func docutils literal notranslate"><span class="pre">live_cells.watch</span></code></a>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">live_cells</span> <span class="k">as</span> <span class="nn">lc</span>
+<h2>Observing Cells<a class="headerlink" href="#observing-cells" title="Link to this heading">¶</a></h2>
+<p>A cell can be observed with the <a class="reference internal" href="../reference.html#macro:live-cells:live" title="live-cells:live"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">LIVE</span></code></a> macro, which takes
+one or more forms, much like <a class="reference external" href="http://www.lispworks.com/reference/HyperSpec/Body/s_progn.htm" title="(in Hyperspec)"><code class="docutils literal notranslate"><span class="pre">PROGN</span></code></a>, that are evaluated in
+sequence and may reference one or more argument cells. When the value
+of at least one argument cell changes, the entire <em>live block</em> is
+reevaluated, similar to how the value of a computed cell is
+recomputed.</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
 
-<span class="n">a</span> <span class="o">=</span> <span class="n">lc</span><span class="o">.</span><span class="n">mutable</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">lc</span><span class="o">.</span><span class="n">mutable</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1">;; This LIVE block is run whenever the value of</span>
+<span class="c1">;; either A or B changes</span>
 
-<span class="n">lc</span><span class="o">.</span><span class="n">watch</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">a</span><span class="p">()</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">b</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">))</span>
-
-<span class="n">a</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># Prints 5, 1</span>
-<span class="n">b</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1"># Prints 5, 10</span>
+<span class="p">(</span><span class="nv">live</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">format</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;A = ~a, B = ~a~%&quot;</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="p">))</span>
 </pre></div>
 </div>
-<p><a class="reference internal" href="../live_cells.html#live_cells.watch" title="live_cells.watch"><code class="xref any py py-func docutils literal notranslate"><span class="pre">live_cells.watch</span></code></a> takes a watch function and registers it to be
-called when the values of the cells referenced within it change. In
-the example above, a watch function that prints the values of cells
-<code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> is defined. This function is called automatically when the
-value of either <code class="docutils literal notranslate"><span class="pre">a</span></code> or <code class="docutils literal notranslate"><span class="pre">b</span></code> changes.</p>
-<p>There are a couple of points to keep in mind when using <a class="reference internal" href="../live_cells.html#live_cells.watch" title="live_cells.watch"><code class="xref any py py-func docutils literal notranslate"><span class="pre">live_cells.watch</span></code></a>:</p>
-<ul class="simple">
-<li><p>The watch function is called once immediately when
-<a class="reference internal" href="../live_cells.html#live_cells.watch" title="live_cells.watch"><code class="xref any py py-func docutils literal notranslate"><span class="pre">live_cells.watch</span></code></a> is called, to determine which cells are
-referenced by it.</p></li>
-<li><p><a class="reference internal" href="../live_cells.html#live_cells.watch" title="live_cells.watch"><code class="xref any py py-func docutils literal notranslate"><span class="pre">live_cells.watch</span></code></a> automatically tracks which cells are
-referenced within the watch function and calls it when their values
-change. This works even when the cells are referenced conditionally.</p></li>
-</ul>
-<div class="admonition attention">
-<p class="admonition-title">Attention</p>
-<p>Within a watch function, the values of cells are referenced using
-the function call syntax, e.g. <code class="docutils literal notranslate"><span class="pre">a()</span></code>, rather than accessing the
-<code class="docutils literal notranslate"><span class="pre">value</span></code> property directly.</p>
-</div>
-<p>Every call to <a class="reference internal" href="../live_cells.html#live_cells.watch" title="live_cells.watch"><code class="xref any py py-func docutils literal notranslate"><span class="pre">live_cells.watch</span></code></a> adds a new watch function:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">live_cells</span> <span class="k">as</span> <span class="nn">lc</span>
-
-<span class="n">a</span> <span class="o">=</span> <span class="n">lc</span><span class="o">.</span><span class="n">mutable</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">lc</span><span class="o">.</span><span class="n">mutable</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
-<span class="n">lc</span><span class="o">.</span><span class="n">watch</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">a</span><span class="p">()</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">b</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">))</span>
-<span class="n">lc</span><span class="o">.</span><span class="n">watch</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;A = </span><span class="si">{</span><span class="n">a</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">))</span>
-
-<span class="c1"># Prints: 20, 1</span>
-<span class="c1"># Also prints: A = 20</span>
-<span class="n">a</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">20</span>
-
-<span class="c1"># Prints 20, 10</span>
-<span class="n">b</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">10</span>
+<p>In this example a <em>live block</em> is defined that prints the values of
+cells <code class="docutils literal notranslate"><span class="pre">A</span></code> and <code class="docutils literal notranslate"><span class="pre">B</span></code>. This block is evaluated once, when the <code class="docutils literal notranslate"><span class="pre">LIVE</span></code>
+form is first evaluated, which results in the following being printed:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>A = 1, B = 2
 </pre></div>
 </div>
-<p>This results in the following being printed:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>20, 1
+<p>The block is evaluated again whenever the value of either <code class="docutils literal notranslate"><span class="pre">A</span></code> or
+<code class="docutils literal notranslate"><span class="pre">B</span></code> changes.</p>
+<p>The following:</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>results in the following two lines being printed:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>A = 5, B = 1
+A = 5, B = 10
+</pre></div>
+</div>
+<p>Each <a class="reference internal" href="../reference.html#macro:live-cells:live" title="live-cells:live"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">LIVE</span></code></a> form creates a new <em>live block</em> that observes only those
+cells referenced by the forms within it.</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nv">live</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">format</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;A = ~a, B = ~a~%&quot;</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">live</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">format</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;A = ~a~%&quot;</span><span class="w"> </span><span class="nv">a</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>In this example two <em>live blocks</em> are created. The first <em>live block</em>
+observes cells <code class="docutils literal notranslate"><span class="pre">A</span></code> and <code class="docutils literal notranslate"><span class="pre">B</span></code> while the second block only observes
+cell <code class="docutils literal notranslate"><span class="pre">A</span></code>.</p>
+<p>An assignment to cell <code class="docutils literal notranslate"><span class="pre">A</span></code>, such as:</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>causes both blocks to be evaluated resulting in the following lines
+being printed (the order in which the lines are printed may vary):</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>A = 20, B = 1
 A = 20
-20, 20
 </pre></div>
 </div>
-<p>In this example, the second watch function only observes the value of
-<code class="docutils literal notranslate"><span class="pre">a</span></code>. Change the value of <code class="docutils literal notranslate"><span class="pre">a</span></code> results in both the first and second
-watch function being called. Changing the value of <code class="docutils literal notranslate"><span class="pre">b</span></code> results in
-only the first watch function being called, since the second watch
-function does not reference <code class="docutils literal notranslate"><span class="pre">b</span></code> and hence is not observing it.</p>
-<p><a class="reference internal" href="../live_cells.html#live_cells.watch" title="live_cells.watch"><code class="xref any py py-func docutils literal notranslate"><span class="pre">live_cells.watch</span></code></a> returns a watch <em>handle</em> (<a class="reference internal" href="../live_cells.html#live_cells.CellWatcher" title="live_cells.CellWatcher"><code class="xref any py py-class docutils literal notranslate"><span class="pre">CellWatcher</span></code></a>),
-which provides a <code class="docutils literal notranslate"><span class="pre">stop</span></code> method that <em>deregisters</em> the watch
-function. When the <code class="docutils literal notranslate"><span class="pre">stop</span></code> method is called, the watch function is no
-longer called when the values of the cells it is observing change.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">live_cells</span> <span class="k">as</span> <span class="nn">lc</span>
-
-<span class="n">a</span> <span class="o">=</span> <span class="n">lc</span><span class="o">.</span><span class="n">mutable</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-
-<span class="n">watcher</span> <span class="o">=</span> <span class="n">lc</span><span class="o">.</span><span class="n">watch</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;A = </span><span class="si">{</span><span class="n">a</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">))</span>
-
-<span class="c1"># Prints A = 1</span>
-<span class="n">a</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">1</span>
-
-<span class="c1"># Prints A = 2</span>
-<span class="n">a</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">2</span>
-
-<span class="n">watcher</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-
-<span class="c1"># Doesn&#39;t print anything</span>
-<span class="n">a</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">3</span>
+<p>An assignment to cell <code class="docutils literal notranslate"><span class="pre">B</span></code>, such as:</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<blockquote>
-<div><p>A watch function with more than one expression can be defined by
-using <a class="reference internal" href="../live_cells.html#live_cells.watch" title="live_cells.watch"><code class="xref any py py-func docutils literal notranslate"><span class="pre">live_cells.watch</span></code></a> as a decorator:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">live_cells</span> <span class="k">as</span> <span class="nn">lc</span>
-
-<span class="n">a</span> <span class="o">=</span> <span class="n">lc</span><span class="o">.</span><span class="n">mutable</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-
-<span class="nd">@lc</span><span class="o">.</span><span class="n">watch</span>
-<span class="k">def</span> <span class="nf">watcher</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;A = </span><span class="si">{</span><span class="n">a</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;A + 1 = </span><span class="si">{</span><span class="n">a</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-
-<span class="c1"># Prints:</span>
-<span class="c1">#   A = 2</span>
-<span class="c1">#   A + 1 = 3</span>
-
-<span class="n">a</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">2</span>
+<p>causes only the first block to be evaluated, since the second block is
+not observing cell <code class="docutils literal notranslate"><span class="pre">B</span></code>. This results in only one line being printed:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>A = 20, B = 10
 </pre></div>
 </div>
-</div></blockquote>
-<p>The decorated function is registered as a watch function that
-observes the cells referenced within it. The watch handle can be
-accessed by the name of the decorated function. For example, the
-watch function in the previous example can be stopped with the
-following:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">watcher</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+<section id="stopping-observers">
+<h3>Stopping Observers<a class="headerlink" href="#stopping-observers" title="Link to this heading">¶</a></h3>
+<p>The <a class="reference internal" href="../reference.html#macro:live-cells:live" title="live-cells:live"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">LIVE</span></code></a> macro returns a function of zero arguments that,
+when called, stops the <em>live block</em>. Once a <em>live block</em> is stopped it
+is no longer run when the values of the cells referenced within it
+change.</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+
+<span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="nv">stop</span><span class="w"> </span><span class="p">(</span><span class="nv">live</span>
+<span class="w">             </span><span class="p">(</span><span class="nb">format</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;A = ~a~%&quot;</span><span class="p">))))</span>
+
+<span class="w">  </span><span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="c1">; Prints A = 1</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="c1">; Prints A = 2</span>
+
+<span class="w">  </span><span class="c1">;; Stop the live block</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">funcall</span><span class="w"> </span><span class="nv">stop</span><span class="p">)</span>
+
+<span class="w">  </span><span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span><span class="w"> </span><span class="c1">; Doesn&#39;t print anything</span>
 </pre></div>
 </div>
-</div>
-<p><a class="reference internal" href="../live_cells.html#live_cells.watch" title="live_cells.watch"><code class="xref any py py-func docutils literal notranslate"><span class="pre">live_cells.watch</span></code></a> also takes an optional <code class="docutils literal notranslate"><span class="pre">schedule</span></code> argument,
-which if not <em>None</em> is a function that is called when the watch
-function should be called, with the watch callback passed as an
-argument. The <code class="docutils literal notranslate"><span class="pre">schedule</span></code> function should <em>schedule</em> the callback
-function to it, to be called at a later stage. If <code class="docutils literal notranslate"><span class="pre">schedule</span></code> is
-<em>None</em>, the watch function is called immediately when the cells
-referenced within it change.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gevent</span>
-<span class="kn">import</span> <span class="nn">live_cells</span> <span class="k">as</span> <span class="nn">lc</span>
-
-<span class="n">a</span> <span class="o">=</span> <span class="n">lc</span><span class="o">.</span><span class="n">mutable</span><span class="p">()</span>
-
-<span class="nd">@lc</span><span class="o">.</span><span class="n">watch</span><span class="p">(</span><span class="n">schedule</span><span class="o">=</span><span class="n">gevent</span><span class="o">.</span><span class="n">spawn</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">watch</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">a</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<p>In this example the <em>live block</em> is stopped after two assignments to
+cell <code class="docutils literal notranslate"><span class="pre">A</span></code>. This results in the following lines being printed:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>A = 0
+A = 1
+A = 2
 </pre></div>
 </div>
-<p>In this example a watch function observing cell <code class="docutils literal notranslate"><span class="pre">a</span></code> is defined. When
-the value of <code class="docutils literal notranslate"><span class="pre">a</span></code> changes, the watch function is not called
-immediately but is scheduled to run on a <a class="reference external" href="http://www.gevent.org/">gevent</a> green thread, using <code class="docutils literal notranslate"><span class="pre">gevent.spawn</span></code>.</p>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>The watch function sees the values of the cells, which are
-referenced within it, as they are at the time the <code class="docutils literal notranslate"><span class="pre">schedule</span></code>
-function is called and not at the time when the watch function is
-actually run. This guarantees that the watch function will not
-“miss” updates if it runs after the values of the cells are changed
-again.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The first line <code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">=</span> <span class="pre">0</span></code> is printed when the <a class="reference internal" href="../reference.html#macro:live-cells:live" title="live-cells:live"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">LIVE</span></code></a> form
+is first evaluated.</p>
 </div>
+<p>The third assignment <code class="docutils literal notranslate"><span class="pre">(setf</span> <span class="pre">a</span> <span class="pre">3)</span></code> doesn’t cause the block to run
+because the stop function has been called.</p>
 </section>
-<section id="computed-cells">
-<h2>Computed Cells<a class="headerlink" href="#computed-cells" title="Permalink to this heading"></a></h2>
-<p>A <em>computed cell</em> is a cell with a value that is defined as a function
-of the values of one or more argument cells. Whenever the value of an
-argument cell changes, the value of the computed cell is recomputed.</p>
-<p>Computed cells are defined using <a class="reference internal" href="../live_cells.html#live_cells.computed" title="live_cells.computed"><code class="xref any py py-func docutils literal notranslate"><span class="pre">live_cells.computed</span></code></a>, which
-takes the value computation function of the cell:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">live_cells</span> <span class="k">as</span> <span class="nn">lc</span>
-
-<span class="n">a</span> <span class="o">=</span> <span class="n">lc</span><span class="o">.</span><span class="n">mutable</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">lc</span><span class="o">.</span><span class="n">mutable</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-
-<span class="nb">sum</span> <span class="o">=</span> <span class="n">lc</span><span class="o">.</span><span class="n">computed</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">a</span><span class="p">()</span> <span class="o">+</span> <span class="n">b</span><span class="p">())</span>
-</pre></div>
-</div>
-<p>In this example, <code class="docutils literal notranslate"><span class="pre">sum</span></code> is a computed cell with the value defined as
-the sum of cells <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code>. The value of <code class="docutils literal notranslate"><span class="pre">sum</span></code> is recomputed
-whenever the value of either <code class="docutils literal notranslate"><span class="pre">a</span></code> or <code class="docutils literal notranslate"><span class="pre">b</span></code> changes. This is
-demonstrated below:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lc</span><span class="o">.</span><span class="n">watch</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The sum is </span><span class="si">{</span><span class="nb">sum</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">))</span>
-
-<span class="n">a</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">3</span> <span class="c1"># Prints: The sum is 5</span>
-<span class="n">b</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1"># Prints: The sum is 7</span>
-</pre></div>
-</div>
-<p>In this example:</p>
-<ol class="arabic simple">
-<li><p>A watch function observing the <code class="docutils literal notranslate"><span class="pre">sum</span></code> cell is defined.</p></li>
-<li><p>The value of <code class="docutils literal notranslate"><span class="pre">a</span></code> is set to <code class="docutils literal notranslate"><span class="pre">3</span></code>, which:</p>
-<ol class="arabic simple">
-<li><p>Causes the value of <code class="docutils literal notranslate"><span class="pre">sum</span></code> to be recomputed.</p></li>
-<li><p>Calls the watch function defined in 1.</p></li>
-</ol>
-</li>
-<li><p>The value of <code class="docutils literal notranslate"><span class="pre">b</span></code> is set to <code class="docutils literal notranslate"><span class="pre">4</span></code>, which likewise also results in
-the value of <code class="docutils literal notranslate"><span class="pre">sum</span></code> being recomputed and the watch function being
-called.</p></li>
-</ol>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>A computed cell with more than one expression can be defined by
-using <a class="reference internal" href="../live_cells.html#live_cells.computed" title="live_cells.computed"><code class="xref any py py-func docutils literal notranslate"><span class="pre">live_cells.computed</span></code></a> as a decorator:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">live_cells</span> <span class="k">as</span> <span class="nn">lc</span>
-
-<span class="n">n</span> <span class="o">=</span> <span class="n">lc</span><span class="o">.</span><span class="n">mutable</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-
-<span class="nd">@lc</span><span class="o">.</span><span class="n">computed</span>
-<span class="k">def</span> <span class="nf">factorial_n</span><span class="p">():</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="mi">1</span>
-
-    <span class="k">while</span> <span class="n">n</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-      <span class="n">result</span> <span class="o">*=</span> <span class="n">n</span>
-      <span class="n">n</span> <span class="o">-=</span> <span class="mi">1</span>
-
-    <span class="k">return</span> <span class="n">result</span>
-
-<span class="n">lc</span><span class="o">.</span><span class="n">watch</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;n! = </span><span class="si">{</span><span class="n">factorial_n</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">))</span>
-</pre></div>
-</div>
-<p>The computed cell is defined with the decorated function as the
-compute function. The cell can then be referenced using the name of
-the decorated function.</p>
-</div>
-<p>The <a class="reference internal" href="../live_cells.html#live_cells.computed" title="live_cells.computed"><code class="xref any py py-func docutils literal notranslate"><span class="pre">live_cells.computed</span></code></a> function takes a <code class="docutils literal notranslate"><span class="pre">changes_only</span></code>
-argument which allows you to control whether the computed cell
-notifies its observers if its value hasn’t changed after a
-recomputation. By default this is <code class="docutils literal notranslate"><span class="pre">False</span></code>, which means the computed
-cell notifies its observers whenever it is recomputed. If
-<code class="docutils literal notranslate"><span class="pre">changes_only</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, the cell only notifies its observers if
-the new value of the cell is not equal to its previous value.</p>
-<p>This is demonstrated with the following example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">live_cells</span> <span class="k">as</span> <span class="nn">lc</span>
-
-<span class="n">a</span> <span class="o">=</span> <span class="n">lc</span><span class="o">.</span><span class="n">mutable</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">lc</span><span class="o">.</span><span class="n">computed</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">a</span> <span class="o">%</span> <span class="mi">2</span><span class="p">,</span> <span class="n">changes_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="n">lc</span><span class="o">.</span><span class="n">watch</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">b</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">))</span>
-
-<span class="n">a</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">a</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="n">a</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">5</span>
-<span class="n">a</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">6</span>
-<span class="n">a</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">8</span>
-</pre></div>
-</div>
-<p>This results in the following being printed to standard output:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>0
-1
-0
-</pre></div>
-</div>
-<p>Notice that only three lines are printed to standard output, even
-though the value of the computed cell argument <code class="docutils literal notranslate"><span class="pre">a</span></code> was changed five
-times.</p>
-<p>If <code class="docutils literal notranslate"><span class="pre">changes_only=True</span></code> is omitted from the definition of <code class="docutils literal notranslate"><span class="pre">b</span></code>, the
-following is printed to standard output:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>0
-1
-1
-1
-0
-0
-</pre></div>
-</div>
-<p>Notice that a new line is printed to standard output whenever the
-value of <code class="docutils literal notranslate"><span class="pre">a</span></code>, which is an argument of <code class="docutils literal notranslate"><span class="pre">b</span></code> is changed. This is
-because <code class="docutils literal notranslate"><span class="pre">b</span></code> notifies its observers whenever the value of its
-argument <code class="docutils literal notranslate"><span class="pre">a</span></code> has changed, even if <code class="docutils literal notranslate"><span class="pre">b</span></code>‘s new value is equal to
-its previous value.</p>
 </section>
 <section id="batch-updates">
-<h2>Batch Updates<a class="headerlink" href="#batch-updates" title="Permalink to this heading"></a></h2>
-<p>The values of multiple mutable cells can be set simultaneously in a
-<em>batch update</em>. The effect of this is that while the values of the
-cells are changed on setting the <code class="docutils literal notranslate"><span class="pre">value</span></code> property, the observers of
-the cells are only notified after all the cell values have been set.</p>
-<p>Batch updates are performed using the <a class="reference internal" href="../live_cells.html#live_cells.batch" title="live_cells.batch"><code class="xref any py py-func docutils literal notranslate"><span class="pre">live_cells.batch</span></code></a> context
-manager:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">live_cells</span> <span class="k">as</span> <span class="nn">lc</span>
+<h2>Batch Updates<a class="headerlink" href="#batch-updates" title="Link to this heading">¶</a></h2>
+<p>The values of multiple cells can be set simultaneously by wrapping the
+assignments (the <a class="reference external" href="http://www.lispworks.com/reference/HyperSpec/Body/a_setf.htm" title="(in Hyperspec)"><code class="docutils literal notranslate"><span class="pre">SETF</span></code></a> forms) in a
+<a class="reference internal" href="../reference.html#macro:live-cells:batch" title="live-cells:batch"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">BATCH</span></code></a> form. <a class="reference internal" href="../reference.html#macro:live-cells:batch" title="live-cells:batch"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">BATCH</span></code></a>, like
+<a class="reference external" href="http://www.lispworks.com/reference/HyperSpec/Body/s_progn.htm" title="(in Hyperspec)"><code class="docutils literal notranslate"><span class="pre">PROGN</span></code></a>, takes one or more forms, which are
+evaluated in sequence:</p>
+<p>The effect of this is that while the values of the cells are changed
+as soon as the <a class="reference external" href="http://www.lispworks.com/reference/HyperSpec/Body/a_setf.htm" title="(in Hyperspec)"><code class="docutils literal notranslate"><span class="pre">SETF</span></code></a> forms are evaluated, the
+observers (<em>live blocks</em> and <em>computed cells</em>) are only notified after
+the exiting the <a class="reference internal" href="../reference.html#macro:live-cells:batch" title="live-cells:batch"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">BATCH</span></code></a> form.</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
 
-<span class="n">a</span> <span class="o">=</span> <span class="n">lc</span><span class="o">.</span><span class="n">mutable</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">lc</span><span class="o">.</span><span class="n">mutable</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">live</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">format</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;A = ~a, B = ~a~%&quot;</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="p">))</span>
 
-<span class="n">lc</span><span class="o">.</span><span class="n">watch</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;a = </span><span class="si">{</span><span class="n">a</span><span class="p">()</span><span class="si">}</span><span class="s1">, b = </span><span class="si">{</span><span class="n">b</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">))</span>
-
-<span class="c1"># This only prints: a = 15, b = 3</span>
-<span class="k">with</span> <span class="n">lc</span><span class="o">.</span><span class="n">batch</span><span class="p">():</span>
-    <span class="n">a</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">15</span>
-    <span class="n">b</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="c1">;; Only prints: A = 15, B = 3</span>
+<span class="p">(</span><span class="nv">batch</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">15</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>In the example above, the values of <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> are set to <code class="docutils literal notranslate"><span class="pre">15</span></code>
-and <code class="docutils literal notranslate"><span class="pre">3</span></code> respectively, with a <em>batch update</em>. The watch function,
-which observes both <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> is only called once when exiting
-the context managed by <a class="reference internal" href="../live_cells.html#live_cells.batch" title="live_cells.batch"><code class="xref any py py-func docutils literal notranslate"><span class="pre">live_cells.batch</span></code></a>.</p>
-<p>As a result the following is printed:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>a = 0, b = 1
-a = 15, b = 3
+<p>In this example the values of <code class="docutils literal notranslate"><span class="pre">A</span></code> and <code class="docutils literal notranslate"><span class="pre">B</span></code> are set to <code class="docutils literal notranslate"><span class="pre">15</span></code> and
+<code class="docutils literal notranslate"><span class="pre">3</span></code>, respectively, within <a class="reference internal" href="../reference.html#macro:live-cells:batch" title="live-cells:batch"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">BATCH</span></code></a>. This causes the <em>live
+block</em>, which prints the values of <code class="docutils literal notranslate"><span class="pre">A</span></code> and <code class="docutils literal notranslate"><span class="pre">B</span></code>, to run once after
+the value of <code class="docutils literal notranslate"><span class="pre">B</span></code> is set to <code class="docutils literal notranslate"><span class="pre">3</span></code>. The first assignment <code class="docutils literal notranslate"><span class="pre">(setf</span> <span class="pre">a</span>
+<span class="pre">15)</span></code> <strong>DOES NOT</strong> cause the <em>live block</em> to run.</p>
+<p>Only two lines are printed. The first line:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>A = 0, B = 1
 </pre></div>
 </div>
-<ol class="arabic simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">0,</span> <span class="pre">b</span> <span class="pre">=</span> <span class="pre">1</span></code> is printed when the watch function is first defined.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">15,</span> <span class="pre">b</span> <span class="pre">=</span> <span class="pre">3</span></code> is printed when exiting the context managed by
-<a class="reference internal" href="../live_cells.html#live_cells.batch" title="live_cells.batch"><code class="xref any py py-func docutils literal notranslate"><span class="pre">live_cells.batch</span></code></a>.</p></li>
-</ol>
+<p>is printed when the <a class="reference internal" href="../reference.html#macro:live-cells:live" title="live-cells:live"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">LIVE</span></code></a> form is first evaluated, while
+the second line:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>A = 15, B = 3
+</pre></div>
+</div>
+<p>is printed after the <a class="reference internal" href="../reference.html#macro:live-cells:batch" title="live-cells:batch"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">BATCH</span></code></a> form is evaluated.</p>
+<p><a class="reference internal" href="../reference.html#macro:live-cells:batch" title="live-cells:batch"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">BATCH</span></code></a> can be nested within another <a class="reference internal" href="../reference.html#macro:live-cells:batch" title="live-cells:batch"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">BATCH</span></code></a>,
+however the observers of the cells, which have their values changed
+within the batch, are only notified when exiting the outermost
+<a class="reference internal" href="../reference.html#macro:live-cells:batch" title="live-cells:batch"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">BATCH</span></code></a>.</p>
+<p>For example the following:</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">batch</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">batch</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">20</span><span class="p">))</span>
+
+<span class="w">  </span><span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="mi">100</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>only results in one line <code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">=</span> <span class="pre">20,</span> <span class="pre">B</span> <span class="pre">=</span> <span class="pre">100</span></code> being printed.</p>
+</section>
+<section id="local-cells">
+<h2>Local Cells<a class="headerlink" href="#local-cells" title="Link to this heading">¶</a></h2>
+<p>Cells local to a given lexical scope can be defined with
+<a class="reference internal" href="../reference.html#macro:live-cells:cell-let" title="live-cells:cell-let"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">CELL-LET</span></code></a>. Like <a class="reference external" href="http://www.lispworks.com/reference/HyperSpec/Body/s_let_l.htm" title="(in Hyperspec)"><code class="docutils literal notranslate"><span class="pre">LET</span></code></a>, the first
+argument is a list of bindings to establish followed by a list of body
+forms that are evaluated in order.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>All cells are lexically scoped, including global cells defined with
+<a class="reference internal" href="../reference.html#macro:live-cells:defcell" title="live-cells:defcell"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">DEFCELL</span></code></a>. This differs from global variables, defined
+with <a class="reference external" href="http://www.lispworks.com/reference/HyperSpec/Body/m_defpar.htm" title="(in Hyperspec)"><code class="docutils literal notranslate"><span class="pre">DEFVAR</span></code></a> and
+<a class="reference external" href="http://www.lispworks.com/reference/HyperSpec/Body/m_defpar.htm" title="(in Hyperspec)"><code class="docutils literal notranslate"><span class="pre">DEFPARAMETER</span></code></a>, which are dynamically scoped.</p>
+</div>
+<p>Each binding is of the form <code class="docutils literal notranslate"><span class="pre">(CELL-NAME</span> <span class="pre">VALUE-FORM)</span></code> where
+<code class="docutils literal notranslate"><span class="pre">CELL-NAME</span></code> is the name of the cell, which is made visible to
+the body forms, and <code class="docutils literal notranslate"><span class="pre">VALUE-FORM</span></code> is the cell value form.</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">cell-let</span><span class="w"> </span><span class="p">((</span><span class="nv">a</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">           </span><span class="p">(</span><span class="nv">b</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">           </span><span class="p">(</span><span class="nv">sum</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">live</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">format</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;A + B = ~a~%&quot;</span><span class="w"> </span><span class="nv">sum</span><span class="p">))</span>
+
+<span class="w">  </span><span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="w">  </span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this example three local cells are defined <code class="docutils literal notranslate"><span class="pre">A</span></code>, <code class="docutils literal notranslate"><span class="pre">B</span></code> and a
+computed cell <code class="docutils literal notranslate"><span class="pre">SUM</span></code>. These cells can be used just like global cells
+defined with <a class="reference internal" href="../reference.html#macro:live-cells:defcell" title="live-cells:defcell"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">DEFCELL</span></code></a>, however they are only visible to the
+body forms of the <a class="reference internal" href="../reference.html#macro:live-cells:cell-let" title="live-cells:cell-let"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">CELL-LET</span></code></a>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Cells defined using <a class="reference internal" href="../reference.html#macro:live-cells:cell-let" title="live-cells:cell-let"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">CELL-LET</span></code></a> can reference cells
+defined earlier in the same <a class="reference internal" href="../reference.html#macro:live-cells:cell-let" title="live-cells:cell-let"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">CELL-LET</span></code></a>. This makes
+<a class="reference internal" href="../reference.html#macro:live-cells:cell-let" title="live-cells:cell-let"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">CELL-LET</span></code></a> more similar to <a class="reference external" href="http://www.lispworks.com/reference/HyperSpec/Body/s_let_l.htm" title="(in Hyperspec)"><code class="docutils literal notranslate"><span class="pre">LET*</span></code></a>
+than <a class="reference external" href="http://www.lispworks.com/reference/HyperSpec/Body/s_let_l.htm" title="(in Hyperspec)"><code class="docutils literal notranslate"><span class="pre">LET</span></code></a>.</p>
+</div>
 </section>
 </section>
 
 
-           </div>
+            <div class="clearer"></div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to Live Cells Python’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="cell-expressions.html" class="btn btn-neutral float-right" title="Cell Expressions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright 2024, Alexander Gutev.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
         </div>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Cells</a><ul>
+<li><a class="reference internal" href="#setting-the-value-of-a-cell">Setting the value of a cell</a></li>
+<li><a class="reference internal" href="#computed-cells">Computed Cells</a></li>
+<li><a class="reference internal" href="#observing-cells">Observing Cells</a><ul>
+<li><a class="reference internal" href="#stopping-observers">Stopping Observers</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#batch-updates">Batch Updates</a></li>
+<li><a class="reference internal" href="#local-cells">Local Cells</a></li>
+</ul>
+</li>
+</ul>
 
-</body>
+  </div><h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation index</a><ul>
+      <li>Previous: <a href="../index.html" title="previous chapter">live-cells-cl documentation</a></li>
+      <li>Next: <a href="cell-expressions.html" title="next chapter">Cell Value Forms</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/basics/cells.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  
+  </body>
 </html>
