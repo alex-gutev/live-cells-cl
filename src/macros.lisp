@@ -1,9 +1,32 @@
 (in-package :live-cells)
 
-(defmacro defcell (name expression &environment env)
-  (if (constantp expression env)
-      `(define-mutable-cell% ,name ,expression)
-      `(define-computed-cell% ,name ,expression)))
+(defmacro defcell (name value-form &environment env)
+  "Define a global cell identified by NAME.
+
+This macro defines a cell identified by NAME with its value computed
+by VALUE-FORM. The value of the cell can be referenced by the symbol
+NAME following the DEFCELL form.
+
+If VALUE-FORM is a constant, by CONSTANTP, a mutable cell is defined
+which can have its value set directly using SETF or SETQ on the symbol
+NAME.
+
+If VALUE-FORM is not a constant a computed cell is created. A computed
+cell may reference one or more argument cells in VALUE-FORM or a
+function called during the evaluation of VALUE-FORM.  When the values
+of any of the argument cells change, the value of the computed cell is
+recomputed by evaluating VALUE-FORM again. The referenced argument
+cells are determined automatically when the VALUE-FORM is evaluated.
+
+This macro creates a cell definition that is visible globally to all
+forms unless it is lexically shadowed by a definition with the same
+NAME using CELL-LET. Note that despite being visible globally, the
+cell definition is still lexically scoped and not dynamically scoped
+like global variables defined with DEFVAR or DEFPARAMETER."
+
+  (if (constantp value-form env)
+      `(define-mutable-cell% ,name ,value-form)
+      `(define-computed-cell% ,name ,value-form)))
 
 (defmacro define-mutable-cell% (name expression)
   (let ((spec (make-instance
@@ -22,14 +45,16 @@
     (generate-cell-definition spec)))
 
 (defmacro live (&body forms)
-  "Defines a live block consisting of FORMS.
+  "Define a live block consisting of FORMS.
 
-The FORMS are executed whenever the values of the cells referenced by
-them change, and are always evaluated once immediately before the LIVE
-form returns.
+The FORMS are evaluated once when the LIVE form is first evaluated,
+after which they are evaluated again whenever the values of the cells
+referenced by them change. Cells may be referenced either directly in
+FORMS or by a function called during the evaluation of FORMS.
 
-Returns a function which when called, stops the live block for future
-cell value changes."
+Returns a function which when called, stops the live block. Once
+stopped the live block will no longer be called when the values of the
+referenced cells change."
 
   (let ((spec (make-instance 'watch-function-spec :body forms)))
     (generate-watch-function spec)))
@@ -54,6 +79,22 @@ stops the live blocks defined immediately within it."
            (foreach #'funcall ,stoppers))))))
 
 (defmacro cell-let ((&rest bindings) &body body &environment env)
+  "Define cells that are visible only to the forms in BODY.
+
+BINDINGS is a list of cell bindings to establish, similar to
+LET*. Each item in BINDINGS is a list of the form (NAME VALUE-FORM),
+where NAME is the symbol identifying the cell and VALUE-FORM is the
+value form of the cell. The cell can then be referenced within the
+forms in BODY by the symbol NAME.
+
+The cells defined in BINDINGS lexcially shadow those defined in the
+global environment, with DEFCELL, or by an enclosing CELL-LET
+form. Like LET* and unlike LET, each cell definition may reference the
+cells defined earlier in the same CELL-LET.
+
+The forms in BODY are evaluated in an implicit PROGN. The value
+returned by the last form is returned by the CELL-LET form."
+
   (flet ((make-cell-binding (binding form)
            (destructuring-bind (name &optional initform)
                (ensure-list binding)

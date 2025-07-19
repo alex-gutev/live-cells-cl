@@ -26,7 +26,8 @@
    :with-live-scope
    :cell-let
    :batch
-   :none)
+   :none
+   :stop-computation)
 
   (:documentation
    "Provides the API for using live cells."))

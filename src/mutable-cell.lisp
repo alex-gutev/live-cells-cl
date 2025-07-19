@@ -47,20 +47,23 @@ The NOTIFY-UPDATE function is called after the current batch ends."
   (foreach #'funcall *batch-list*))
 
 (defmacro batch (&body forms)
-  "Batch changes to the values of mutable.
+  "Batch assignments to the values of mutable cells.
 
-The forms in FORMS are evaluated with mutable cell batching in
-effect. This means that when the value of a mutable cell is set, by
-SETF, the observers of the cell are only notified after the last form
+The forms in FORMS are evaluated, in an implicit PROGN, with mutable
+cell assignment batching in effect. This means that when the value of
+a mutable cell is set by SETF within the dynamic extent of the BATCH
+form, the observers of the cell are only notified after the last form
 in FORMS is evaluated, or the BATCH form is exited by a non-local exit
-such as by RETURN-FORM. The effect of this is the appearance (to the
-observers) that the values of the mutable cells are all set
-simultaneously.
+such as by RETURN-FORM. The effect of this is that the cells appear to
+have their values changed simultaneously, to their observers, that the
+values of the mutable cells are all set simultaneously.
 
-NOTE: When a BATCH form is nested in the dynamic extent of another
-BATCH form, the nested BATCH form has no effect other than to evaluate
-FORMS. The observers of the cells are only notified when exiting the
-outermost BATCH form.
+.. note::
+
+   When a BATCH form is nested in the dynamic extent of another BATCH
+   form, the nested BATCH form has no effect other than to evaluate
+   FORMS. The observers of the cells are only notified when exiting
+   the outermost BATCH form.
 
 Returns the value of the last form in FORMS."
 
