@@ -1,5 +1,7 @@
 from os.path import join, dirname, realpath, expandvars
 
+import sphinx_cldomain_theme
+
 # Configuration file for the Sphinx documentation builder.
 #
 # For the full list of built-in configuration values, see the documentation:
@@ -51,5 +53,11 @@ cl_systems = [{"name": "live-cells",
 cl_packages = ["live-cells"]
 
 highlight_language = 'common-lisp'
+pygments_style = 'emacs'
+
+html_theme = 'cldomain'
+html_theme_path = [sphinx_cldomain_theme.get_html_theme_path()]
+
+html_show_copyright = True
 
 cl_debug = False

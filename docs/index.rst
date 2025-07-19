@@ -52,7 +52,9 @@ results in the following being printed:
    Hello Jane Smith
    Hello Jane Doe
 
-For a more detailed explanation continue with this short tutorial.
+
+Documentation
+=============
    
 .. toctree::
    :maxdepth: 2
