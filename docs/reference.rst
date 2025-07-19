@@ -1,6 +1,8 @@
 API Reference
 ==================
 
+The following symbols are exported by the ``LIVE-CELLS`` package.
+
 .. cl:package:: live-cells
 
 .. cl:macro:: defcell
@@ -12,5 +14,3 @@ API Reference
 .. cl:macro:: batch
 	      
 .. cl:function:: none
-
-.. cl:clos-class:: stop-computation
