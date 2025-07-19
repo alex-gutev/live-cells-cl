@@ -23,6 +23,11 @@ The source code for this library is available on `Github`_.
 Examples
 --------
 
+.. attention::
+
+   This library is still in beta and may experience breaking changes
+   between releases.
+
 Cells (reactive containers for data) are defined using
 :cl:macro:`DEFCELL`.
 
