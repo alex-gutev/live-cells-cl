@@ -16,6 +16,14 @@
     "Name of the variable holding the flag for whether the cell's
     value should be recomputed.")
 
+   (has-value?
+    :initarg :has-value?
+    :initform (cell-symbol 'cell 'has-value?)
+    :accessor has-value?
+    :documentation
+    "Name of the variable holding the flag for whether at least one
+    value has been computed for the cell.")
+
    (updating?
     :initarg :updating?
     :initform (cell-symbol 'cell 'updating?)
@@ -183,12 +191,22 @@ cell has not changed."))
 (defmethod generate-did-change? ((spec observer-cell-spec)) t)
 
 (defmethod generate-cell-variables ((spec observer-cell-spec))
-  (with-slots (stale? updating? changed-dependencies did-change?) spec
+  (with-slots (stale?
+               has-value?
+               updating?
+               changed-dependencies
+               did-change?)
+      spec
 
     (list*
      (make-variable-spec
       :name stale?
       :initform t
+      :type :variable)
+
+     (make-variable-spec
+      :name has-value?
+      :initform nil
       :type :variable)
 
      (make-variable-spec

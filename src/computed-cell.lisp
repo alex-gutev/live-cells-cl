@@ -65,20 +65,25 @@ computes the value of the cell."))
            (call-remove-observer ,arg ,(generate-observer-record spec)))))))
 
 (defmethod generate-use-cell ((spec compute-cell-spec))
-  (with-slots (stale? value compute) spec
-    `(progn
-       `(progn
-          ,'(track-argument ,(generate-argument-record spec))
+  (with-gensyms (condition)
+    (with-slots (stale? has-value? value compute) spec
+      `(progn
+         `(progn
+            ,'(track-argument ,(generate-argument-record spec))
 
-          (when ,',stale?
-            (handler-case
-                (setf ,',value (,',compute))
+            (when ,',stale?
+              (handler-case
+                  (setf ,',value (,',compute))
 
-              (stop-computation () nil))
+                (stop-computation (,',condition)
+                  (unless ,',has-value?
+                    (setf ,',value
+                          (default-value ,',condition)))))
 
-            (setf ,',stale? nil))
+              (setf ,',stale? nil)
+              (setf ,',has-value? t))
 
-          ,',value))))
+            ,',value)))))
 
 (defmethod generate-compute ((spec compute-cell-spec))
   (with-slots (init-form arguments) spec

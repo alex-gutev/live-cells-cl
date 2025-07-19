@@ -157,6 +157,23 @@
       (setf a 4)
       (setf a 5))))
 
+(test none-default-value
+  "Test using NONE while given a default value"
+
+  (cell-let ((a 1)
+             (evens (if (evenp a) a (none 100))))
+
+    (with-expected-values (evens) (4 6)
+      (is (= 100 evens))
+
+      (setf a 3)
+      (setf a 4)
+
+      (setf a 5)
+      (is (= 4 evens))
+
+      (setf a 6))))
+
 (test none-first-value
   "Test using NONE when computing the first value of the cell"
 
