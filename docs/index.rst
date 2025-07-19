@@ -59,6 +59,7 @@ For a more detailed explanation continue with this short tutorial.
    :caption: Contents:
 
    basics/cells.rst
+   basics/cell-expressions.rst
 
 Indices and tables
 ==================
