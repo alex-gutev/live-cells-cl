@@ -358,14 +358,20 @@ macro appears as a place in SETF."
         :body (list (generate-use-cell spec)))))))
 
 (defmethod generate-cell-definition ((spec cell-spec))
-  `(progn
-     ,@(->> (generate-cell-variables spec)
-            (map #'generate-variable-definition))
+  (let ((functions (generate-cell-functions spec)))
+   `(progn
+      ,@(->> (generate-cell-variables spec)
+             (map #'generate-variable-definition))
 
-     ,@(->> (generate-cell-functions spec)
-            (map #'generate-function-definition))
+      (declaim (ftype
+                function
+                ,@(loop for fn in functions
+                        if (= (function-spec-type fn) :function)
+                          collect (function-spec-name fn))))
 
-     ,(generate-extra spec)))
+      ,@(map #'generate-function-definition functions)
+
+      ,(generate-extra spec))))
 
 (defun make-setf-expansion (spec)
   "Generate the SETF expansion for the cell defined by SPEC.
