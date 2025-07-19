@@ -161,6 +161,8 @@ returned by the last form is returned by the CELL-LET form."
 
         `(symbol-macrolet ,(map #'make-variable-binding symbol-macros)
            (let ,(map #'make-variable-binding variables)
+             (declare (ignorable ,@(map #'variable-spec-name variables)))
              (macrolet ,(map #'make-function-binding macros)
                (labels ,(map #'make-function-binding functions)
+                 (declare (ignorable ,@(map (lambda (fn) `#',(function-spec-name fn)) functions)))
                  ,@body))))))))
