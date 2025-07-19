@@ -13,6 +13,13 @@ The source code for this library is available on `Github`_.
 
 .. _Github: https://github.com/alex-gutev/live-cells-cl
 
+.. note::
+
+   This library, and in its name in particular, was inspired by
+   `Cells`_.
+
+   .. _Cells: https://github.com/kennytilton/cells
+
 Examples
 --------
 
