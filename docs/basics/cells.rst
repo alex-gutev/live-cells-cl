@@ -61,9 +61,9 @@ change.
    (pprint sum) ; Prints 3
 
    (setf a 5)
-   (pprint sum) ; Prints 5
+   (pprint sum) ; Prints 7
 
-   (setf a 10)
+   (setf b 10)
    (pprint sum) ; Prints 15
 
 In this example ``SUM`` is a computed cell that references cells ``A``
