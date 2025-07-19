@@ -371,7 +371,8 @@ macro appears as a place in SETF."
 
       ,@(map #'generate-function-definition functions)
 
-      ,(generate-extra spec))))
+      ,(generate-extra spec)
+      ',(name spec))))
 
 (defun make-setf-expansion (spec)
   "Generate the SETF expansion for the cell defined by SPEC.
