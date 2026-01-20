@@ -52,6 +52,45 @@
       (setf a 2)
       (setf b 13))))
 
+(test peek-multiple-cells
+  "Test that PEEK works when multiple cells are referenced."
+
+  (cell-let ((a 1)
+             (b 2)
+             (c 3)
+             (d (cons a (peek (list b c)))))
+
+    (with-expected-values (d)
+        ('(2 2 3) '(3 12 15) '(5 12 15) '(1 12 0))
+
+      (setf a 2)
+      (setf b 10)
+      (setf c 15)
+      (setf b 12)
+      (setf a 3)
+      (setf a 5)
+      (setf c 0)
+      (setf a 1))))
+
+(test peek-in-function
+  "Test that PEEK still works when used inside a function rather than directly in a cell."
+
+  (cell-let ((a 1) (b 2) (c 3))
+    (flet ((f (value)
+             (list value b (peek c))))
+
+      (cell-let ((d (f a)))
+        (with-expected-values (d)
+            ('(10 2 3) '(10 11 3) '(5 11 13) '(5 3 4))
+
+          (setf a 10)
+          (setf b 11)
+          (setf c 12)
+          (setf c 13)
+          (setf a 5)
+          (setf c 4)
+          (setf b 3))))))
+
 (test manage-same-observers
   "Test that observers added through PEEK are added to the same set."
 
