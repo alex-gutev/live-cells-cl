@@ -27,7 +27,8 @@
    :cell-let
    :batch
    :none
-   :stop-computation)
+   :stop-computation
+   :peek)
 
   (:documentation
    "Provides the API for using live cells."))

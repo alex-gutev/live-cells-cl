@@ -19,6 +19,7 @@
                  (:file "computed-cell")
                  (:file "mutable-cell")
                  (:file "watch-function")
+                 (:file "peek")
                  (:file "macros"))))
 
   :depends-on (:alexandria
@@ -44,7 +45,8 @@
                  (:file "computed-cell")
                  (:file "consistency")
                  (:file "init-cleanup")
-                 (:file "watch"))))
+                 (:file "watch")
+                 (:file "peek"))))
 
   :perform (asdf:test-op :after (op c)
                          (uiop:symbol-call :live-cells/test :test-live-cells)))
