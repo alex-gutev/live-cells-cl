@@ -155,4 +155,47 @@ is run. However, changing the value of ``b`` does not cause the value
 of ``c`` to be recomputed because ``b`` is only referenced within a
 :cl:macro:`PEEK` form.
 
+:cl:macro:`PEEK` may also be used directly inside a *live* block or
+inside a function.
 
+.. code-block::
+
+   (defcell n 0)
+   (defcell delta 1)
+
+   (defun foo (x)
+     (+ x n (peek delta)))
+
+   (defcell a 0)
+
+   (live
+     (format t "A = ~a, DELTA = ~a~%" a (peek delta)))
+
+   (setf a 1)  ; Prints A = 2, DELTA = 1
+   (setf n 10) ; Prints A = 12, DELTA = 1
+
+   (setf delta 5)   ; Doesn't print anything
+   (setf delta 100) ; Doesn't print anything
+
+   (setf a 2)  ; Prints A = 112, DELTA = 100
+
+:cl:macro:`PEEK` can wrap any form and applies to all the cells
+referenced with the form.
+
+.. code-block::
+
+   (defcell a 1)
+   (defcell b 2)
+   (defcell c 3)
+
+   ;; Cells B and C are both peeked
+   (defcell d (+ a (peek (* b c))))
+
+   (live
+     (format t "~a~%" d))
+
+   (setf a 10) ; Prints 16
+   (setf b 5)  ; Doesn't print anything
+   (setf c 2)  ; Doesn't print anything
+
+   (setf a 15) ; Prints 25

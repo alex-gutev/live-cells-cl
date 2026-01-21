@@ -4,7 +4,7 @@
 (in-package :live-cells)
 
 (defmacro peek (form)
-  "Read the value of cells without triggering recomputation.
+  "Read the value of cells without triggering a recomputation.
 
 FORM is evaluated in a context such that when the value of a cell is
 referenced it is not registered as an argument cell of the cell in
@@ -26,7 +26,7 @@ of B (using PEEK). Changing the value of A will cause the value of the
 SUM cell to be recomputed. However, changing the value of B will not
 cause the value of SUM to be computed.
 
-.. note::
+.. important::
 
    This macro has no effect if CELL is referenced outside a PEEK form
    within the same cell definition.
