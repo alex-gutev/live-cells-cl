@@ -5,10 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Cell Value Forms &#8212; live-cells-cl 0.1.0 documentation</title>
+    <title>Cell Value Forms &#8212; live-cells-cl 0.2.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d7e2fa82" />
     <link rel="stylesheet" type="text/css" href="../_static/cldomain.css?v=e67a0556" />
-    <script src="../_static/documentation_options.js?v=01f34227"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=0d495c0a" />
+    <script src="../_static/documentation_options.js?v=938c9ccc"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -36,7 +37,7 @@
         <li class="right" >
           <a href="cells.html" title="Cells"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">live-cells-cl 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">live-cells-cl 0.2.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Cell Value Forms</a></li> 
       </ul>
     </div>  
@@ -158,6 +159,72 @@ a cell is computed cell or not.</p></li>
 </ul>
 </div>
 </section>
+<section id="peeking-cells">
+<h2>Peeking Cells<a class="headerlink" href="#peeking-cells" title="Link to this heading">¶</a></h2>
+<p>If you want to use the value of a cell in a computed cell but don’t
+want changes in the cell’s value triggering a recomputation, wrap the
+cell reference in <a class="reference internal" href="../reference.html#macro:live-cells:peek" title="live-cells:peek"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">PEEK</span></code></a>.</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">c</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="p">(</span><span class="nv">peek</span><span class="w"> </span><span class="nv">b</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nv">live</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">format</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;~a%&quot;</span><span class="w"> </span><span class="nv">c</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="c1">; Prints 4</span>
+<span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="c1">; Doesn&#39;t print anything</span>
+<span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">7</span><span class="p">)</span><span class="w"> </span><span class="c1">; Prints 7</span>
+</pre></div>
+</div>
+<p>In this example <code class="docutils literal notranslate"><span class="pre">c</span></code> is a computed cell that references the value of
+<code class="docutils literal notranslate"><span class="pre">a</span></code> and <em>peeks</em> the value of <code class="docutils literal notranslate"><span class="pre">b</span></code>. Changing the value of <code class="docutils literal notranslate"><span class="pre">a</span></code>
+causes the value of <code class="docutils literal notranslate"><span class="pre">c</span></code> to be recomputed, and hence the <em>live</em> block
+is run. However, changing the value of <code class="docutils literal notranslate"><span class="pre">b</span></code> does not cause the value
+of <code class="docutils literal notranslate"><span class="pre">c</span></code> to be recomputed because <code class="docutils literal notranslate"><span class="pre">b</span></code> is only referenced within a
+<a class="reference internal" href="../reference.html#macro:live-cells:peek" title="live-cells:peek"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">PEEK</span></code></a> form.</p>
+<p><a class="reference internal" href="../reference.html#macro:live-cells:peek" title="live-cells:peek"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">PEEK</span></code></a> may also be used directly inside a <em>live</em> block or
+inside a function.</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">delta</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">defun</span><span class="w"> </span><span class="nv">foo</span><span class="w"> </span><span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="p">(</span><span class="nv">peek</span><span class="w"> </span><span class="nv">delta</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nv">live</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">format</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;A = ~a, DELTA = ~a~%&quot;</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="p">(</span><span class="nv">peek</span><span class="w"> </span><span class="nv">delta</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w">  </span><span class="c1">; Prints A = 2, DELTA = 1</span>
+<span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="c1">; Prints A = 12, DELTA = 1</span>
+
+<span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">delta</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w">   </span><span class="c1">; Doesn&#39;t print anything</span>
+<span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">delta</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="c1">; Doesn&#39;t print anything</span>
+
+<span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w">  </span><span class="c1">; Prints A = 112, DELTA = 100</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="../reference.html#macro:live-cells:peek" title="live-cells:peek"><code class="xref cl cl-macro docutils literal notranslate"><span class="pre">PEEK</span></code></a> can wrap any form and applies to all the cells
+referenced with the form.</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">c</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1">;; Cells B and C are both peeked</span>
+<span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">d</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="p">(</span><span class="nv">peek</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="nv">live</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">format</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;~a~%&quot;</span><span class="w"> </span><span class="nv">d</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="c1">; Prints 16</span>
+<span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w">  </span><span class="c1">; Doesn&#39;t print anything</span>
+<span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">c</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w">  </span><span class="c1">; Doesn&#39;t print anything</span>
+
+<span class="p">(</span><span class="nb">setf</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">15</span><span class="p">)</span><span class="w"> </span><span class="c1">; Prints 25</span>
+</pre></div>
+</div>
+</section>
 </section>
 
 
@@ -173,6 +240,7 @@ a cell is computed cell or not.</p></li>
 <li><a class="reference internal" href="#">Cell Value Forms</a><ul>
 <li><a class="reference internal" href="#aborting-a-computation">Aborting a computation</a></li>
 <li><a class="reference internal" href="#condition-handling">Condition handling</a></li>
+<li><a class="reference internal" href="#peeking-cells">Peeking Cells</a></li>
 </ul>
 </li>
 </ul>

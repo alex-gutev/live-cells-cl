@@ -5,10 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>API Reference &#8212; live-cells-cl 0.1.0 documentation</title>
+    <title>API Reference &#8212; live-cells-cl 0.2.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d7e2fa82" />
     <link rel="stylesheet" type="text/css" href="_static/cldomain.css?v=e67a0556" />
-    <script src="_static/documentation_options.js?v=01f34227"></script>
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=0d495c0a" />
+    <script src="_static/documentation_options.js?v=938c9ccc"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -32,7 +33,7 @@
         <li class="right" >
           <a href="basics/cell-expressions.html" title="Cell Value Forms"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">live-cells-cl 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">live-cells-cl 0.2.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">API Reference</a></li> 
       </ul>
     </div>  
@@ -136,6 +137,38 @@ cell, the value of the cell is set to <code class="docutils literal notranslate"
 is then handled by the cell. It is important that this condition is
 not handled by the value form of the cell, otherwise this function
 will have no effect.</p>
+</dd></dl>
+
+<dl class="cl macro">
+<dt class="sig sig-object cl" id="macro:live-cells:peek">
+<em class="property"><span class="pre">Macro</span> </em> (<span class="sig-name descname"><span class="pre">peek</span></span> <em><span class="pre">form</span></em>)<a class="headerlink" href="#macro:live-cells:peek" title="Link to this definition">¶</a></dt>
+<dd><p>Read the value of cells without triggering a recomputation.</p>
+<p><code class="docutils literal notranslate"><span class="pre">FORM</span></code> is evaluated in a context such that when the value of a cell is
+referenced it is not registered as an argument cell of the cell in
+which the <a class="reference internal" href="#macro:live-cells:peek" title="live-cells:peek"><code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">PEEK</span></code></a> form is evaluated. This means that the value of the
+cell, in which the <a class="reference internal" href="#macro:live-cells:peek" title="live-cells:peek"><code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">PEEK</span></code></a> form is evaluated, will not be recomputed when
+the values of the cells referenced in <code class="docutils literal notranslate"><span class="pre">FORM</span></code> change.</p>
+<p>In the following example</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">sum</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="p">(</span><span class="nv">peek</span><span class="w"> </span><span class="nv">b</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>the SUM cell references the value of <code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">A</span></code> directly and <em>peeks</em> the value
+of <code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">B</span></code> (using <a class="reference internal" href="#macro:live-cells:peek" title="live-cells:peek"><code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">PEEK</span></code></a>). Changing the value of <code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">A</span></code> will cause the value of the
+SUM cell to be recomputed. However, changing the value of <code class="xref cl cl-symbol docutils literal notranslate"><span class="pre">B</span></code> will not
+cause the value of SUM to be computed.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This macro has no effect if CELL is referenced outside a PEEK form
+within the same cell definition.</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defcell</span><span class="w"> </span><span class="nv">sum</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="p">(</span><span class="nv">peek</span><span class="w"> </span><span class="nv">b</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>In this example, PEEK has no effect because the SUM cell references
+B outside a PEEK form.</p>
+</div>
 </dd></dl>
 
 </section>

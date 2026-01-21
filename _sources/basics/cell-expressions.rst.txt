@@ -126,3 +126,76 @@ result in the following being printed:
    * Computed cells, ``VALIDP`` in this example, can be observed just
      like any other cell. In-fact, the live block doesn't care whether
      a cell is computed cell or not.
+
+Peeking Cells
+-------------
+
+If you want to use the value of a cell in a computed cell but don’t
+want changes in the cell's value triggering a recomputation, wrap the
+cell reference in :cl:macro:`PEEK`.
+
+.. code-block::
+
+   (defcell a 0)
+   (defcell b 1)
+
+   (defcell c (+ a (peek b)))
+
+   (live
+     (format t "~a%" c))
+
+   (setf a 3) ; Prints 4
+   (setf b 5) ; Doesn't print anything
+   (setf a 7) ; Prints 7
+
+In this example ``c`` is a computed cell that references the value of
+``a`` and *peeks* the value of ``b``. Changing the value of ``a``
+causes the value of ``c`` to be recomputed, and hence the *live* block
+is run. However, changing the value of ``b`` does not cause the value
+of ``c`` to be recomputed because ``b`` is only referenced within a
+:cl:macro:`PEEK` form.
+
+:cl:macro:`PEEK` may also be used directly inside a *live* block or
+inside a function.
+
+.. code-block::
+
+   (defcell n 0)
+   (defcell delta 1)
+
+   (defun foo (x)
+     (+ x n (peek delta)))
+
+   (defcell a 0)
+
+   (live
+     (format t "A = ~a, DELTA = ~a~%" a (peek delta)))
+
+   (setf a 1)  ; Prints A = 2, DELTA = 1
+   (setf n 10) ; Prints A = 12, DELTA = 1
+
+   (setf delta 5)   ; Doesn't print anything
+   (setf delta 100) ; Doesn't print anything
+
+   (setf a 2)  ; Prints A = 112, DELTA = 100
+
+:cl:macro:`PEEK` can wrap any form and applies to all the cells
+referenced with the form.
+
+.. code-block::
+
+   (defcell a 1)
+   (defcell b 2)
+   (defcell c 3)
+
+   ;; Cells B and C are both peeked
+   (defcell d (+ a (peek (* b c))))
+
+   (live
+     (format t "~a~%" d))
+
+   (setf a 10) ; Prints 16
+   (setf b 5)  ; Doesn't print anything
+   (setf c 2)  ; Doesn't print anything
+
+   (setf a 15) ; Prints 25

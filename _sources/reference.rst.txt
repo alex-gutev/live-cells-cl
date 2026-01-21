@@ -14,3 +14,5 @@ The following symbols are exported by the ``LIVE-CELLS`` package.
 .. cl:macro:: batch
 	      
 .. cl:function:: none
+
+.. cl:macro:: peek

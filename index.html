@@ -5,10 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>live-cells-cl documentation &#8212; live-cells-cl 0.1.0 documentation</title>
+    <title>live-cells-cl documentation &#8212; live-cells-cl 0.2.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d7e2fa82" />
     <link rel="stylesheet" type="text/css" href="_static/cldomain.css?v=e67a0556" />
-    <script src="_static/documentation_options.js?v=01f34227"></script>
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=0d495c0a" />
+    <script src="_static/documentation_options.js?v=938c9ccc"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -34,7 +35,7 @@
         <li class="right" >
           <a href="basics/cells.html" title="Cells"
              accesskey="N">next</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">live-cells-cl 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="#">live-cells-cl 0.2.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">live-cells-cl documentation</a></li> 
       </ul>
     </div>  
@@ -48,7 +49,7 @@
 <h1>live-cells-cl documentation<a class="headerlink" href="#live-cells-cl-documentation" title="Link to this heading">¶</a></h1>
 <p>Live-Cells-CL is a library that adds reactive programming to lisp. The
 functionality of the library is ported from <a class="reference external" href="https://livecell.gutev.dev/">Live Cells</a> for Dart.</p>
-<p>The source code for this library is available on <a class="reference external" href="https://github.com/alex-gutev/live-cells-cl">Github</a>.</p>
+<p>The source code is available on <a class="reference external" href="https://github.com/alex-gutev/live-cells-cl">Github</a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This library, and in its name in particular, was inspired by
@@ -92,6 +93,23 @@ Hello Jane Doe
 </div>
 </section>
 </section>
+<section id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Live-Cells-CL is available on <a class="reference external" href="https://www.quicklisp.org/beta/">Quicklisp</a>. However, it is recommended
+that you download the source manually to get the latest version.</p>
+</div>
+<ol class="arabic tight-list">
+<li><p>Download the source code from the latest <a class="reference external" href="https://github.com/alex-gutev/live-cells-cl/releases/latest">release</a>.</p></li>
+<li><p>Extract the tarball to your Quicklisp local project directory.</p></li>
+<li><p>Load the <code class="docutils literal notranslate"><span class="pre">LIVE-CELLS</span></code> system with the following:</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">ql:quickload</span><span class="w"> </span><span class="ss">:live-cells</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
 <section id="documentation">
 <h1>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
@@ -108,6 +126,7 @@ Hello Jane Doe
 <li class="toctree-l1"><a class="reference internal" href="basics/cell-expressions.html">Cell Value Forms</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="basics/cell-expressions.html#aborting-a-computation">Aborting a computation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="basics/cell-expressions.html#condition-handling">Condition handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics/cell-expressions.html#peeking-cells">Peeking Cells</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">API Reference</a></li>
@@ -136,6 +155,7 @@ Hello Jane Doe
 <li><a class="reference internal" href="#examples">Examples</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
 <li><a class="reference internal" href="#documentation">Documentation</a></li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
