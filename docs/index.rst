@@ -9,7 +9,7 @@ live-cells-cl documentation
 Live-Cells-CL is a library that adds reactive programming to lisp. The
 functionality of the library is ported from `Live Cells <https://livecell.gutev.dev/>`__ for Dart.
 
-The source code for this library is available on `Github`_.
+The source code is available on `Github`_.
 
 .. _Github: https://github.com/alex-gutev/live-cells-cl
 
@@ -68,6 +68,25 @@ results in the following being printed:
    Hello Jane Smith
    Hello Jane Doe
 
+Installation
+============
+
+.. note::
+
+   Live-Cells-CL is available on `Quicklisp
+   <https://www.quicklisp.org/beta/>`__. However, it is recommended
+   that you download the source manually to get the latest version.
+
+
+.. rst-class:: tight-list
+
+1. Download the source code from the latest `release <https://github.com/alex-gutev/live-cells-cl/releases/latest>`__.
+
+2. Extract the tarball to your Quicklisp local project directory.
+
+3. Load the ``LIVE-CELLS`` system with the following::
+
+     (ql:quickload :live-cells)
 
 Documentation
 =============

@@ -11,9 +11,9 @@ import sphinx_cldomain_theme
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'live-cells-cl'
-copyright = '2025, Alexander Gutev'
+copyright = '2025, 2026 Alexander Gutev'
 author = 'Alexander Gutev'
-release = '0.1.0'
+release = '0.2.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -35,6 +35,8 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 html_theme = 'alabaster'
 html_static_path = ['_static']
 
+def setup(app):
+    app.add_css_file('custom.css')
 
 # --- CL domain customizations:
 #
