@@ -126,3 +126,33 @@ result in the following being printed:
    * Computed cells, ``VALIDP`` in this example, can be observed just
      like any other cell. In-fact, the live block doesn't care whether
      a cell is computed cell or not.
+
+Peeking Cells
+-------------
+
+If you want to use the value of a cell in a computed cell but don’t
+want changes in the cell's value triggering a recomputation, wrap the
+cell reference in :cl:macro:`PEEK`.
+
+.. code-block::
+
+   (defcell a 0)
+   (defcell b 1)
+
+   (defcell c (+ a (peek b)))
+
+   (live
+     (format t "~a%" c))
+
+   (setf a 3) ; Prints 4
+   (setf b 5) ; Doesn't print anything
+   (setf a 7) ; Prints 7
+
+In this example ``c`` is a computed cell that references the value of
+``a`` and *peeks* the value of ``b``. Changing the value of ``a``
+causes the value of ``c`` to be recomputed, and hence the *live* block
+is run. However, changing the value of ``b`` does not cause the value
+of ``c`` to be recomputed because ``b`` is only referenced within a
+:cl:macro:`PEEK` form.
+
+
